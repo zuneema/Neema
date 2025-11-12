@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Data Collection</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f2f5fa;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2b4b9b;
+    }
+
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      max-width: 600px;
+      margin: 0 auto 30px auto;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-top: 10px;
+    }
+
+    input, textarea, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      background: #2b4b9b;
+      color: white;
+      font-weight: 600;
+      border: none;
+      margin-top: 15px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #1e3572;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background: #2b4b9b;
+      color: white;
+    }
+
+    .status-btn {
+      padding: 6px 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: white;
+      font-weight: 600;
+    }
+
+    .called {
+      background: #28a745;
+    }
+
+    .remaining {
+      background: #dc3545;
+    }
+  </style>
+</head>
+<body>
+  <h1>Student Data Collection</h1>
+
+  <form id="studentForm">
+    <label>Name</label>
+    <input type="text" id="name" required>
+
+    <label>Phone</label>
+    <input type="text" id="phone" required>
+
+    <label>Email</label>
+    <input type="email" id="email">
+
+    <label>Course</label>
+    <input type="text" id="course" required>
+
+    <label>Query</label>
+    <textarea id="query"></textarea>
+
+    <button type="submit">Save Student Data</button>
+  </form>
+
+  <table id="studentTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>Email</th>
+        <th>Course</th>
+        <th>Query</th>
+        <th>Status</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const scriptURL = "YOUR_WEB_APP_URL_HERE"; // Replace this
+
+    async function loadStudents() {
+      const res = await fetch(scriptURL);
+      const result = await res.json();
+      const tbody = document.querySelector("#studentTable tbody");
+      tbody.innerHTML = "";
+
+      if (result.success) {
+        result.data.forEach(student => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${student.name}</td>
+            <td>${student.phone}</td>
+            <td>${student.email}</td>
+            <td>${student.course}</td>
+            <td>${student.query}</td>
+            <td>
+              <button class="status-btn ${student.status}" onclick="updateStatus('${student.id}', '${student.status === 'called' ? 'remaining' : 'called'}')">
+                ${student.status === 'called' ? 'Called' : 'Remaining'}
+              </button>
+            </td>
+            <td>${student.date}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+    }
+
+    document.getElementById("studentForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const course = document.getElementById("course").value.trim();
+      const query = document.getElementById("query").value.trim();
+
+      if (!name || !phone || !course) return alert("Please fill required fields");
+
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("phone", phone);
+      formData.append("email", email);
+      formData.append("course", course);
+      formData.append("query", query);
+      formData.append("status", "remaining");
+      formData.append("date", new Date().toLocaleDateString());
+
+      try {
+        const res = await fetch(scriptURL, { method: "POST", body: formData });
+        const result = await res.json();
+        if (result.success) {
+          alert("Student added successfully!");
+          e.target.reset();
+          loadStudents();
+        } else {
+          alert(result.error || "Error saving data. Please try again.");
+        }
+      } catch (err) {
+        alert("Network error: " + err.message);
+      }
+    });
+
+    async function updateStatus(id, newStatus) {
+      const formData = new FormData();
+      formData.append("action", "updateStatus");
+      formData.append("id", id);
+      formData.append("status", newStatus);
+
+      const res = await fetch(scriptURL, { method: "POST", body: formData });
+      const result = await res.json();
+
+      if (result.success) {
+        loadStudents();
+      } else {
+        alert("Failed to update status: " + result.error);
+      }
+    }
+
+    loadStudents();
+  </script>
+</body>
+</html>
