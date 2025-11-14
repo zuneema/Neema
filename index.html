@@ -6,7 +6,7 @@
     <title>Student Data Collection System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Your existing CSS remains the same */
+        /* Your CSS remains exactly the same */
         :root {
             --primary: #4361ee;
             --secondary: #3f37c9;
@@ -473,9 +473,9 @@
     <div class="notification" id="notification"></div>
 
     <script>
-        // UPDATE THIS URL AFTER DEPLOYING YOUR APPS SCRIPT
-        const scriptURL = 'https://script.google.com/macros/s/AKfycby9tvM5x1oxKAq8PS0EPUxNJodsVzIDPUhXQ0onWJGvR2WzboK6FVTXUS559R7FTiDOyA/exec'; // CHANGE THIS!
-
+        // REPLACE THIS WITH YOUR NEW DEPLOYMENT URL
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyqUtMPeI59ABZVthQkGq07oIzscExkLvFB47_U2DFbxzx-zYPyVd_8Ewh_3o3srsWmPg/exec';
+        
         const studentForm = document.getElementById('studentForm');
         const studentsTableBody = document.getElementById('studentsTableBody');
         const searchInput = document.getElementById('searchInput');
@@ -511,7 +511,7 @@
                 timestamp: new Date().toISOString()
             };
 
-            // Check for duplicates in Google Sheets first
+            // Check for duplicates in local storage first
             const localStudents = JSON.parse(localStorage.getItem('students') || '[]');
             if (localStudents.some(s => s.phone === newStudent.phone && s.course === newStudent.course)) {
                 showNotification('Student with same phone & course already exists!', 'error');
@@ -523,14 +523,18 @@
             submitBtn.disabled = true;
 
             try {
-                // FIRST: Try to save to Google Sheets
+                // Try to save to Google Sheets first
                 const response = await fetch(scriptURL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify(newStudent)
                 });
 
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
 
                 const result = await response.json();
 
@@ -538,7 +542,7 @@
                     // Successfully saved to Google Sheets
                     newStudent.id = result.id;
                     
-                    // Update local storage with fresh data from Google Sheets
+                    // Refresh data from Google Sheets to ensure consistency
                     await loadStudentsFromSheet();
                     
                     showNotification('Student data saved to Google Sheets!', 'success');
@@ -549,7 +553,7 @@
             } catch (err) {
                 console.error('Google Sheets save failed:', err);
                 
-                // FALLBACK: Save to local storage only if Google Sheets fails
+                // Fallback: Save to local storage
                 newStudent.id = 'local-' + Date.now().toString();
                 const localStudents = JSON.parse(localStorage.getItem('students') || '[]');
                 localStudents.push(newStudent);
@@ -557,7 +561,7 @@
                 
                 renderStudentsTable(localStudents);
                 updateStats();
-                showNotification('Saved locally (Google Sheets unavailable)', 'warning');
+                showNotification('Saved to local storage (Google Sheets unavailable)', 'warning');
             } finally {
                 submitBtn.innerHTML = original;
                 submitBtn.disabled = false;
@@ -575,7 +579,6 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    // Successfully loaded from Google Sheets
                     const data = result.data || [];
                     localStorage.setItem('students', JSON.stringify(data));
                     renderStudentsTable(data);
@@ -586,7 +589,6 @@
                 }
             } catch (err) {
                 console.error('Failed to load from Google Sheets:', err);
-                // Fallback to local storage
                 const localStudents = JSON.parse(localStorage.getItem('students') || '[]');
                 renderStudentsTable(localStudents);
                 updateStats();
@@ -629,7 +631,6 @@
             const newStatus = current === 'called' ? 'remaining' : 'called';
 
             try {
-                // FIRST: Try to update in Google Sheets
                 const response = await fetch(scriptURL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -640,7 +641,6 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    // Successfully updated in Google Sheets - refresh data
                     showNotification('Status updated in Google Sheets!', 'success');
                     await loadStudentsFromSheet();
                 } else {
@@ -648,7 +648,6 @@
                 }
             } catch (err) {
                 console.error('Google Sheets update failed:', err);
-                // FALLBACK: Update local storage
                 const allStudents = JSON.parse(localStorage.getItem('students') || '[]');
                 const studentIndex = allStudents.findIndex(x => x.id === id);
                 if (studentIndex > -1) {
@@ -656,7 +655,7 @@
                     localStorage.setItem('students', JSON.stringify(allStudents));
                     renderStudentsTable(allStudents);
                     updateStats();
-                    showNotification('Status updated locally (Google Sheets unavailable)', 'warning');
+                    showNotification('Status updated locally', 'warning');
                 }
             }
         }
@@ -688,9 +687,9 @@
         function clearLocalData() {
             if (confirm('Clear all local data? (Google Sheets data will remain intact)')) {
                 localStorage.removeItem('students');
-                // Reload data from Google Sheets after clearing local data
-                loadStudentsFromSheet();
-                showNotification('Local data cleared, reloading from Google Sheets', 'success');
+                renderStudentsTable();
+                updateStats();
+                showNotification('Local data cleared', 'success');
             }
         }
 
