@@ -17,26 +17,26 @@
             --gray: #6c757d;
             --light-gray: #e9ecef;
         }
-        
+       
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+       
         body {
             background-color: #f5f7fb;
             color: var(--dark);
             line-height: 1.6;
         }
-        
+       
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
-        
+       
         header {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
@@ -45,35 +45,35 @@
             margin-bottom: 30px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
-        
+       
         .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 0 20px;
         }
-        
+       
         .logo {
             display: flex;
             align-items: center;
             gap: 15px;
         }
-        
+       
         .logo i {
             font-size: 2.5rem;
         }
-        
+       
         .logo h1 {
             font-size: 1.8rem;
             font-weight: 700;
         }
-        
+       
         .main-content {
             display: grid;
             grid-template-columns: 1fr 2fr;
             gap: 30px;
         }
-        
+       
         .card {
             background: white;
             border-radius: 10px;
@@ -81,7 +81,7 @@
             padding: 25px;
             margin-bottom: 25px;
         }
-        
+       
         .card-title {
             font-size: 1.4rem;
             margin-bottom: 20px;
@@ -90,18 +90,18 @@
             align-items: center;
             gap: 10px;
         }
-        
+       
         .form-group {
             margin-bottom: 20px;
         }
-        
+       
         label {
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
             color: var(--dark);
         }
-        
+       
         input, textarea, select {
             width: 100%;
             padding: 12px 15px;
@@ -110,18 +110,18 @@
             font-size: 1rem;
             transition: all 0.3s;
         }
-        
+       
         input:focus, textarea:focus, select:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
         }
-        
+       
         textarea {
             min-height: 120px;
             resize: vertical;
         }
-        
+       
         .btn {
             display: inline-block;
             padding: 12px 25px;
@@ -135,63 +135,63 @@
             transition: all 0.3s;
             text-align: center;
         }
-        
+       
         .btn:hover {
             background-color: var(--secondary);
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        
+       
         .btn-success {
             background-color: var(--success);
         }
-        
+       
         .btn-success:hover {
             background-color: #3aa8d0;
         }
-        
+       
         .btn-danger {
             background-color: var(--danger);
         }
-        
+       
         .btn-danger:hover {
             background-color: #c1121f;
         }
-        
+       
         .btn-warning {
             background-color: var(--warning);
         }
-        
+       
         .btn-warning:hover {
             background-color: #e59400;
         }
-        
+       
         .table-container {
             overflow-x: auto;
         }
-        
+       
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
         }
-        
+       
         th, td {
             padding: 12px 15px;
             text-align: left;
             border-bottom: 1px solid var(--light-gray);
         }
-        
+       
         th {
             background-color: var(--light);
             font-weight: 600;
             color: var(--dark);
         }
-        
+       
         tr:hover {
             background-color: rgba(67, 97, 238, 0.05);
         }
-        
+       
         .status-badge {
             display: inline-block;
             padding: 5px 12px;
@@ -199,22 +199,22 @@
             font-size: 0.85rem;
             font-weight: 600;
         }
-        
+       
         .status-called {
             background-color: rgba(76, 201, 240, 0.2);
             color: var(--success);
         }
-        
+       
         .status-remaining {
             background-color: rgba(252, 163, 17, 0.2);
             color: var(--warning);
         }
-        
+       
         .action-buttons {
             display: flex;
             gap: 8px;
         }
-        
+       
         .action-btn {
             padding: 6px 12px;
             border: none;
@@ -224,28 +224,28 @@
             font-weight: 600;
             transition: all 0.2s;
         }
-        
+       
         .search-filter {
             display: flex;
             gap: 15px;
             margin-bottom: 20px;
         }
-        
+       
         .search-box {
             flex: 1;
         }
-        
+       
         .filter-box {
             width: 200px;
         }
-        
+       
         .stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 15px;
             margin-bottom: 25px;
         }
-        
+       
         .stat-card {
             background: white;
             border-radius: 10px;
@@ -253,30 +253,30 @@
             text-align: center;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
         }
-        
+       
         .stat-value {
             font-size: 2.5rem;
             font-weight: 700;
             margin: 10px 0;
         }
-        
+       
         .stat-total {
             color: var(--primary);
         }
-        
+       
         .stat-called {
             color: var(--success);
         }
-        
+       
         .stat-remaining {
             color: var(--warning);
         }
-        
+       
         .stat-label {
             font-size: 0.9rem;
             color: var(--gray);
         }
-        
+       
         footer {
             text-align: center;
             margin-top: 40px;
@@ -284,17 +284,17 @@
             color: var(--gray);
             font-size: 0.9rem;
         }
-        
+       
         @media (max-width: 992px) {
             .main-content {
                 grid-template-columns: 1fr;
             }
-            
+           
             .stats {
                 grid-template-columns: 1fr;
             }
         }
-        
+       
         .notification {
             position: fixed;
             top: 20px;
@@ -308,19 +308,24 @@
             transform: translateX(150%);
             transition: transform 0.3s ease;
         }
-        
+       
         .notification.show {
             transform: translateX(0);
         }
-        
+       
         .notification.success {
             background-color: var(--success);
         }
-        
+       
         .notification.error {
             background-color: var(--danger);
         }
-        
+       
+        .notification.warning {
+            background-color: var(--warning);
+            color: #000;
+        }
+       
         .loading {
             display: inline-block;
             width: 20px;
@@ -331,7 +336,7 @@
             animation: spin 1s ease-in-out infinite;
             margin-right: 10px;
         }
-        
+       
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
@@ -351,7 +356,7 @@
             </div>
         </div>
     </header>
-    
+   
     <div class="container">
         <div class="stats">
             <div class="stat-card">
@@ -370,7 +375,7 @@
                 <div class="stat-desc">Need follow-up</div>
             </div>
         </div>
-        
+       
         <div class="main-content">
             <div class="left-column">
                 <div class="card">
@@ -410,11 +415,11 @@
                     </form>
                 </div>
             </div>
-            
+           
             <div class="right-column">
                 <div class="card">
                     <h2 class="card-title"><i class="fas fa-list"></i> Student Records</h2>
-                    
+                   
                     <div class="search-filter">
                         <div class="search-box">
                             <input type="text" id="searchInput" placeholder="Search by name, phone, or course...">
@@ -427,7 +432,7 @@
                             </select>
                         </div>
                     </div>
-                    
+                   
                     <div class="table-container">
                         <table id="studentsTable">
                             <thead>
@@ -444,7 +449,7 @@
                             </tbody>
                         </table>
                     </div>
-                    
+                   
                     <div class="table-actions" style="margin-top: 20px; display: flex; justify-content: space-between;">
                         <button class="btn" id="refreshBtn">
                             <i class="fas fa-sync-alt"></i> Refresh Data
@@ -457,248 +462,241 @@
             </div>
         </div>
     </div>
-    
+   
     <footer>
         <div class="container">
             <p>Student Data Collection System &copy; 2023 | Designed for Educational Institutions</p>
         </div>
     </footer>
-    
+   
     <div class="notification" id="notification"></div>
 
-<script>
-    // REPLACE THIS WITH YOUR GOOGLE APPS SCRIPT URL AFTER DEPLOYMENT
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwoqLvdvH7_KswLTk4NY0F0VV9T3sARX9Fzvlu5wHQ6B7U5_2mHMSQQsYXKhzlnsui8/exec';
+    <script>
+        // UPDATE THIS URL AFTER DEPLOYING YOUR APPS SCRIPT
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyD0w5lP92zuqwPXMyrtBYNuD5FL2U5FOsvO5dDse9cQErEJp3sNsVjkSYuhwEoxOq-6g/exec'; // CHANGE THIS!
 
-    // DOM Elements
-    const studentForm = document.getElementById('studentForm');
-    const studentsTableBody = document.getElementById('studentsTableBody');
-    const searchInput = document.getElementById('searchInput');
-    const statusFilter = document.getElementById('statusFilter');
-    const refreshBtn = document.getElementById('refreshBtn');
-    const clearDataBtn = document.getElementById('clearDataBtn');
-    const notification = document.getElementById('notification');
-    const totalStudentsEl = document.getElementById('totalStudents');
-    const calledStudentsEl = document.getElementById('calledStudents');
-    const remainingStudentsEl = document.getElementById('remainingStudents');
-    const submitBtn = document.getElementById('submitBtn');
+        const studentForm = document.getElementById('studentForm');
+        const studentsTableBody = document.getElementById('studentsTableBody');
+        const searchInput = document.getElementById('searchInput');
+        const statusFilter = document.getElementById('statusFilter');
+        const refreshBtn = document.getElementById('refreshBtn');
+        const clearDataBtn = document.getElementById('clearDataBtn');
+        const notification = document.getElementById('notification');
+        const totalStudentsEl = document.getElementById('totalStudents');
+        const calledStudentsEl = document.getElementById('calledStudents');
+        const remainingStudentsEl = document.getElementById('remainingStudents');
+        const submitBtn = document.getElementById('submitBtn');
 
-    // Initialize
-    function init() {
-        loadStudentsFromSheet();
-        studentForm.addEventListener('submit', handleFormSubmit);
-        searchInput.addEventListener('input', filterStudents);
-        statusFilter.addEventListener('change', filterStudents);
-        refreshBtn.addEventListener('click', loadStudentsFromSheet);
-        clearDataBtn.addEventListener('click', clearLocalData);
-    }
-
-    // ---------- FORM SUBMIT ----------
-    async function handleFormSubmit(e) {
-        e.preventDefault();
-
-        const newStudent = {
-            name: document.getElementById('name').value,
-            phone: document.getElementById('phone').value,
-            email: document.getElementById('email').value || 'Not provided',
-            course: document.getElementById('course').value,
-            query: document.getElementById('query').value,
-            status: "remaining",
-            date: new Date().toISOString().split('T')[0],
-            timestamp: new Date().toISOString()
-        };
-
-        // duplicate check (local only)
-        const local = JSON.parse(localStorage.getItem('students') || '[]');
-        if (local.some(s => s.phone === newStudent.phone && s.course === newStudent.course)) {
-            showNotification('Student with same phone & course already exists!', 'error');
-            return;
+        function init() {
+            loadStudentsFromSheet();
+            studentForm.addEventListener('submit', handleFormSubmit);
+            searchInput.addEventListener('input', filterStudents);
+            statusFilter.addEventListener('change', filterStudents);
+            refreshBtn.addEventListener('click', loadStudentsFromSheet);
+            clearDataBtn.addEventListener('click', clearLocalData);
         }
 
-        const original = submitBtn.innerHTML;
-        submitBtn.innerHTML = '<span class="loading"></span> Saving...';
-        submitBtn.disabled = true;
+        async function handleFormSubmit(e) {
+            e.preventDefault();
 
-        try {
-            const resp = await fetch(scriptURL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newStudent)
-            });
-            const result = await resp.json();
+            const newStudent = {
+                name: document.getElementById('name').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                email: (document.getElementById('email').value || 'Not provided').trim(),
+                course: document.getElementById('course').value,
+                query: document.getElementById('query').value.trim(),
+                status: "remaining",
+                date: new Date().toISOString().split('T')[0],
+                timestamp: new Date().toISOString()
+            };
 
-            if (result.success) {
-                // **IMPORTANT:** the sheet now returns the UUID
-                newStudent.id = result.id;
-                // store locally for instant UI
+            const local = JSON.parse(localStorage.getItem('students') || '[]');
+            if (local.some(s => s.phone === newStudent.phone && s.course === newStudent.course)) {
+                showNotification('Student with same phone & course already exists!', 'error');
+                return;
+            }
+
+            const original = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<span class="loading"></span> Saving...';
+            submitBtn.disabled = true;
+
+            try {
+                const resp = await fetch(scriptURL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newStudent)
+                });
+
+                if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+
+                const result = await resp.json();
+
+                if (result.success) {
+                    newStudent.id = result.id;
+                    local.push(newStudent);
+                    localStorage.setItem('students', JSON.stringify(local));
+                    showNotification('Saved to Google Sheets!', 'success');
+                    studentForm.reset();
+                    renderStudentsTable(local);
+                    updateStats();
+                } else {
+                    throw new Error(result.error || 'Save failed');
+                }
+            } catch (err) {
+                console.error('Save failed:', err);
+                newStudent.id = Date.now().toString();
                 local.push(newStudent);
                 localStorage.setItem('students', JSON.stringify(local));
-
-                showNotification('Student saved to Google Sheets!', 'success');
-                studentForm.reset();
                 renderStudentsTable(local);
                 updateStats();
-            } else {
-                throw new Error(result.error || 'Unknown error');
+                showNotification('Saved locally (no internet)', 'warning');
+            } finally {
+                submitBtn.innerHTML = original;
+                submitBtn.disabled = false;
             }
-        } catch (err) {
-            console.error(err);
-            // fallback – store only locally
-            newStudent.id = Date.now().toString();   // temporary id for UI
-            local.push(newStudent);
-            localStorage.setItem('students', JSON.stringify(local));
-            renderStudentsTable(local);
-            updateStats();
-            showNotification('Saved locally (no connection to Sheets)', 'warning');
-        } finally {
-            submitBtn.innerHTML = original;
-            submitBtn.disabled = false;
         }
-    }
 
-    // ---------- LOAD FROM SHEET ----------
-    async function loadStudentsFromSheet() {
-        try {
-            refreshBtn.innerHTML = '<span class="loading"></span> Loading...';
-            refreshBtn.disabled = true;
+        async function loadStudentsFromSheet() {
+            try {
+                refreshBtn.innerHTML = '<span class="loading"></span> Loading...';
+                refreshBtn.disabled = true;
 
-            const resp = await fetch(scriptURL + '?action=getAll'); // GET works, we just call the URL
-            const result = await resp.json();
+                const resp = await fetch(scriptURL, { method: 'GET', mode: 'cors' });
+                if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
 
-            if (result.success) {
-                const data = result.data || [];
-                localStorage.setItem('students', JSON.stringify(data));
-                renderStudentsTable(data);
+                const result = await resp.json();
+
+                if (result.success) {
+                    const data = result.data || [];
+                    localStorage.setItem('students', JSON.stringify(data));
+                    renderStudentsTable(data);
+                    updateStats();
+                    showNotification('Loaded from Google Sheets', 'success');
+                } else {
+                    throw new Error(result.error);
+                }
+            } catch (err) {
+                console.error('Load failed:', err);
+                const local = JSON.parse(localStorage.getItem('students') || '[]');
+                renderStudentsTable(local);
                 updateStats();
-                showNotification('Data loaded from Google Sheets', 'success');
-            } else {
-                throw new Error(result.error);
+                showNotification('Using local data', 'error');
+            } finally {
+                refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh Data';
+                refreshBtn.disabled = false;
             }
-        } catch (err) {
-            console.error(err);
-            const local = JSON.parse(localStorage.getItem('students') || '[]');
-            renderStudentsTable(local);
-            updateStats();
-            showNotification('Using local data – could not reach Sheets', 'error');
-        } finally {
-            refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh Data';
-            refreshBtn.disabled = false;
-        }
-    }
-
-    // ---------- RENDER TABLE ----------
-    function renderStudentsTable(students = []) {
-        if (!students.length) {
-            studentsTableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:30px;">
-                <i class="fas fa-inbox" style="font-size:3rem;color:#dee2e6;margin-bottom:15px;"></i>
-                <p>No student records found.</p></td></tr>`;
-            return;
         }
 
-        studentsTableBody.innerHTML = students.map(s => `
-            <tr>
-                <td><strong>${s.name}</strong><div style="font-size:0.8rem;color:#6c757d;">${s.email}</div></td>
-                <td>${s.phone}</td>
-                <td>${s.course}</td>
-                <td><span class="status-badge status-${s.status}">${s.status === 'called' ? 'Called' : 'Remaining'}</span></td>
-                <td>
-                    <div class="action-buttons">
-                        <button class="action-btn ${s.status === 'called' ? 'btn-success' : 'btn-warning'}"
-                                onclick="updateStatus('${s.id}', '${s.status}')">
-                            ${s.status === 'called' ? 'Called' : 'Mark as Called'}
-                        </button>
-                        <button class="action-btn" onclick="viewDetails('${btoa(JSON.stringify(s))}')">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </div>
-                </td>
-            </tr>`).join('');
-    }
-
-    // ---------- UPDATE STATUS ----------
-    async function updateStatus(id, current) {
-        const newStatus = current === 'called' ? 'remaining' : 'called';
-
-        try {
-            const resp = await fetch(scriptURL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'updateStatus', id, status: newStatus })
-            });
-            const result = await resp.json();
-
-            if (result.success) {
-                showNotification('Status updated in Google Sheets', 'success');
-                loadStudentsFromSheet();               // refresh from server
-            } else {
-                throw new Error(result.error);
+        function renderStudentsTable(students = []) {
+            if (!students.length) {
+                studentsTableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:30px;">
+                    <i class="fas fa-inbox" style="font-size:3rem;color:#dee2e6;margin-bottom:15px;"></i>
+                    <p>No student records found.</p></td></tr>`;
+                return;
             }
-        } catch (err) {
-            console.error(err);
-            // fallback – update locally
+
+            studentsTableBody.innerHTML = students.map(s => `
+                <tr>
+                    <td><strong>${s.name}</strong><div style="font-size:0.8rem;color:#6c757d;">${s.email}</div></td>
+                    <td>${s.phone}</td>
+                    <td>${s.course}</td>
+                    <td><span class="status-badge status-${s.status}">${s.status === 'called' ? 'Called' : 'Remaining'}</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="action-btn ${s.status === 'called' ? 'btn-success' : 'btn-warning'}"
+                                    onclick="updateStatus('${s.id}', '${s.status}')">
+                                ${s.status === 'called' ? 'Called' : 'Mark as Called'}
+                            </button>
+                            <button class="action-btn" onclick="viewDetails('${btoa(JSON.stringify(s))}')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>`).join('');
+        }
+
+        async function updateStatus(id, current) {
+            const newStatus = current === 'called' ? 'remaining' : 'called';
+
+            try {
+                const resp = await fetch(scriptURL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'updateStatus', id, status: newStatus })
+                });
+
+                if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                const result = await resp.json();
+
+                if (result.success) {
+                    showNotification('Status updated!', 'success');
+                    loadStudentsFromSheet();
+                } else {
+                    throw new Error(result.error);
+                }
+            } catch (err) {
+                console.error('Update failed:', err);
+                const all = JSON.parse(localStorage.getItem('students') || '[]');
+                const idx = all.findIndex(x => x.id === id);
+                if (idx > -1) {
+                    all[idx].status = newStatus;
+                    localStorage.setItem('students', JSON.stringify(all));
+                    renderStudentsTable(all);
+                    updateStats();
+                    showNotification('Updated locally', 'warning');
+                }
+            }
+        }
+
+        function filterStudents() {
+            const term = searchInput.value.toLowerCase();
+            const filter = statusFilter.value;
             const all = JSON.parse(localStorage.getItem('students') || '[]');
-            const idx = all.findIndex(x => x.id === id);
-            if (idx > -1) {
-                all[idx].status = newStatus;
-                localStorage.setItem('students', JSON.stringify(all));
-                renderStudentsTable(all);
+
+            const filtered = all.filter(s => {
+                const matchSearch = s.name.toLowerCase().includes(term) ||
+                                    s.phone.includes(term) ||
+                                    s.course.toLowerCase().includes(term);
+                const matchStatus = filter === 'all' || s.status === filter;
+                return matchSearch && matchStatus;
+            });
+            renderStudentsTable(filtered);
+        }
+
+        function updateStats() {
+            const all = JSON.parse(localStorage.getItem('students') || '[]');
+            const total = all.length;
+            const called = all.filter(s => s.status === 'called').length;
+            totalStudentsEl.textContent = total;
+            calledStudentsEl.textContent = called;
+            remainingStudentsEl.textContent = total - called;
+        }
+
+        function clearLocalData() {
+            if (confirm('Clear all local data? (Google Sheets data remains)')) {
+                localStorage.removeItem('students');
+                renderStudentsTable();
                 updateStats();
-                showNotification('Status updated locally only', 'warning');
+                showNotification('Local data cleared', 'success');
             }
         }
-    }
 
-    // ---------- FILTER ----------
-    function filterStudents() {
-        const term = searchInput.value.toLowerCase();
-        const filter = statusFilter.value;
-        const all = JSON.parse(localStorage.getItem('students') || '[]');
-
-        const filtered = all.filter(s => {
-            const matchSearch = s.name.toLowerCase().includes(term) ||
-                                s.phone.includes(term) ||
-                                s.course.toLowerCase().includes(term);
-            const matchStatus = filter === 'all' || s.status === filter;
-            return matchSearch && matchStatus;
-        });
-        renderStudentsTable(filtered);
-    }
-
-    // ---------- STATS ----------
-    function updateStats() {
-        const all = JSON.parse(localStorage.getItem('students') || '[]');
-        const total = all.length;
-        const called = all.filter(s => s.status === 'called').length;
-        totalStudentsEl.textContent = total;
-        calledStudentsEl.textContent = called;
-        remainingStudentsEl.textContent = total - called;
-    }
-
-    // ---------- MISC ----------
-    function clearLocalData() {
-        if (confirm('Clear ALL local records? (Sheet data stays intact)')) {
-            localStorage.removeItem('students');
-            renderStudentsTable();
-            updateStats();
-            showNotification('Local data cleared', 'success');
+        function viewDetails(encoded) {
+            try {
+                const s = JSON.parse(atob(encoded));
+                alert(`Student Details:\n\nName: ${s.name}\nPhone: ${s.phone}\nEmail: ${s.email}\nCourse: ${s.course}\nQuery: ${s.query}\nStatus: ${s.status === 'called' ? 'Called' : 'Remaining'}\nDate: ${s.date}`);
+            } catch (e) { console.error(e); }
         }
-    }
 
-    function viewDetails(encoded) {
-        try {
-            const s = JSON.parse(atob(encoded));
-            alert(`Student Details:\n\nName: ${s.name}\nPhone: ${s.phone}\nEmail: ${s.email}\nCourse: ${s.course}\nQuery: ${s.query}\nStatus: ${s.status === 'called' ? 'Called' : 'Remaining'}\nDate: ${s.date}`);
-        } catch (e) { console.error(e); }
-    }
+        function showNotification(msg, type) {
+            notification.textContent = msg;
+            notification.className = `notification ${type} show`;
+            setTimeout(() => notification.classList.remove('show'), 3000);
+        }
 
-    function showNotification(msg, type) {
-        notification.textContent = msg;
-        notification.className = `notification ${type} show`;
-        setTimeout(() => notification.classList.remove('show'), 3000);
-    }
-
-    document.addEventListener('DOMContentLoaded', init);
-</script>
-    
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
 </body>
 </html>
