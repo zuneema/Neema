@@ -468,7 +468,7 @@
 
     <script>
         // REPLACE THIS WITH YOUR GOOGLE APPS SCRIPT URL AFTER DEPLOYMENT
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbwNNAVD6LITv-0Qq9cUfLAqTkOps8NhsjFPBvnAEh0_LNzgJDp0OzAqNnSz3JzRjXrggA/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycby8pcYH_vjWY97ue9cOS9G3I7Mgjo06lsjFOPIhtkvmY_ZoUWZ0OMF6y9aY6e_OtlM7/exec';
         
         // DOM Elements
         const studentForm = document.getElementById('studentForm');
@@ -634,7 +634,7 @@
                     <td>
                         <div class="action-buttons">
                             <button class="action-btn ${student.status === 'called' ? 'btn-success' : 'btn-warning'}" 
-                                    onclick="updateStatus('${student.id}', '${student.status}')">
+                                    onclick="updateStatus('${student.id}', '${student.phone}', '${student.course}', '${student.status}')">
                                 ${student.status === 'called' ? 'Called' : 'Mark as Called'}
                             </button>
                             <button class="action-btn" onclick="viewDetails('${btoa(JSON.stringify(student))}')">
@@ -667,7 +667,7 @@
         }
         
         // Update student call status
-        async function updateStatus(id, currentStatus) {
+        async function updateStatus(id, phone, course, currentStatus) {
             const newStatus = currentStatus === 'called' ? 'remaining' : 'called';
             
             try {
@@ -678,7 +678,8 @@
                     },
                     body: JSON.stringify({
                         action: 'updateStatus',
-                        id: id,
+                        phone: phone,
+                        course: course,
                         status: newStatus
                     })
                 });
@@ -694,6 +695,17 @@
             } catch (error) {
                 console.error('Error:', error);
                 showNotification('Error updating status. Please try again.', 'error');
+                
+                // Update locally as fallback
+                const students = JSON.parse(localStorage.getItem('students')) || [];
+                const studentIndex = students.findIndex(s => s.id == id);
+                if (studentIndex !== -1) {
+                    students[studentIndex].status = newStatus;
+                    localStorage.setItem('students', JSON.stringify(students));
+                    renderStudentsTable(students);
+                    updateStats();
+                    showNotification('Status updated locally only', 'warning');
+                }
             }
         }
         
