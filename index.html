@@ -1,225 +1,784 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Student Data Collection</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f8fafc;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      color: #2563eb;
-    }
-    form {
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      max-width: 600px;
-      margin: 20px auto;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-    input, textarea, select, button {
-      width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 14px;
-    }
-    button {
-      background-color: #2563eb;
-      color: white;
-      border: none;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    button:hover {
-      background-color: #1e40af;
-    }
-    table {
-      width: 100%;
-      margin-top: 30px;
-      border-collapse: collapse;
-    }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 10px;
-      text-align: left;
-    }
-    th {
-      background-color: #2563eb;
-      color: white;
-    }
-    .status-btn {
-      padding: 6px 10px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      color: white;
-    }
-    .called {
-      background-color: #16a34a;
-    }
-    .remaining {
-      background-color: #dc2626;
-    }
-    .notification {
-      display: none;
-      margin-top: 10px;
-      padding: 10px;
-      border-radius: 5px;
-      text-align: center;
-    }
-    .success {
-      background-color: #d1fae5;
-      color: #065f46;
-    }
-    .error {
-      background-color: #fee2e2;
-      color: #991b1b;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Data Collection System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Your existing CSS remains exactly the same */
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --danger: #e63946;
+            --warning: #fca311;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px 0;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo i {
+            font-size: 2.5rem;
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .card-title {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+        }
+        
+        .btn-success:hover {
+            background-color: #3aa8d0;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+        }
+        
+        .btn-danger:hover {
+            background-color: #c1121f;
+        }
+        
+        .btn-warning {
+            background-color: var(--warning);
+        }
+        
+        .btn-warning:hover {
+            background-color: #e59400;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        th {
+            background-color: var(--light);
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        tr:hover {
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .status-called {
+            background-color: rgba(76, 201, 240, 0.2);
+            color: var(--success);
+        }
+        
+        .status-remaining {
+            background-color: rgba(252, 163, 17, 0.2);
+            color: var(--warning);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .search-filter {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .search-box {
+            flex: 1;
+        }
+        
+        .filter-box {
+            width: 200px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+        
+        .stat-total {
+            color: var(--primary);
+        }
+        
+        .stat-called {
+            color: var(--success);
+        }
+        
+        .stat-remaining {
+            color: var(--warning);
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 992px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background-color: var(--success);
+        }
+        
+        .notification.error {
+            background-color: var(--danger);
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h1>Student Data Collection System</h1>
+                </div>
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i> Admin User
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-label">Total Students</div>
+                <div class="stat-value stat-total" id="totalStudents">0</div>
+                <div class="stat-desc">Registered in system</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Called Students</div>
+                <div class="stat-value stat-called" id="calledStudents">0</div>
+                <div class="stat-desc">Follow-up completed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Remaining Calls</div>
+                <div class="stat-value stat-remaining" id="remainingStudents">0</div>
+                <div class="stat-desc">Need follow-up</div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="left-column">
+                <div class="card">
+                    <h2 class="card-title"><i class="fas fa-user-plus"></i> Add New Student</h2>
+                    <form id="studentForm">
+                        <div class="form-group">
+                            <label for="name">Full Name <span style="color: red;">*</span></label>
+                            <input type="text" id="name" placeholder="Enter student's full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number <span style="color: red;">*</span></label>
+                            <input type="tel" id="phone" placeholder="Enter phone number" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" placeholder="Enter email address (optional)">
+                        </div>
+                        <div class="form-group">
+                            <label for="course">Course Interest <span style="color: red;">*</span></label>
+                            <select id="course" required>
+                                <option value="">Select a course</option>
+                                <option value="MBBS">MBBS</option>
+                                <option value="BDS">BDS</option>
+                                <option value="B.Sc Nursing">B.Sc Nursing</option>
+                                <option value="Paramedical Courses">Paramedical Courses</option>
+                                <option value="Applied Science">Applied Science</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="query">Student Query <span style="color: red;">*</span></label>
+                            <textarea id="query" placeholder="Enter student's questions or concerns" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success" style="width: 100%;" id="submitBtn">
+                            <i class="fas fa-save"></i> Save Student Data
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="right-column">
+                <div class="card">
+                    <h2 class="card-title"><i class="fas fa-list"></i> Student Records</h2>
+                    
+                    <div class="search-filter">
+                        <div class="search-box">
+                            <input type="text" id="searchInput" placeholder="Search by name, phone, or course...">
+                        </div>
+                        <div class="filter-box">
+                            <select id="statusFilter">
+                                <option value="all">All Status</option>
+                                <option value="called">Called</option>
+                                <option value="remaining">Remaining</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table id="studentsTable">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Phone</th>
+                                    <th>Course</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentsTableBody">
+                                <!-- Student data will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-actions" style="margin-top: 20px; display: flex; justify-content: space-between;">
+                        <button class="btn" id="refreshBtn">
+                            <i class="fas fa-sync-alt"></i> Refresh Data
+                        </button>
+                        <button class="btn btn-danger" id="clearDataBtn">
+                            <i class="fas fa-trash"></i> Clear Local Data
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>Student Data Collection System &copy; 2023 | Designed for Educational Institutions</p>
+        </div>
+    </footer>
+    
+    <div class="notification" id="notification"></div>
 
-  <h1>Student Data Collection</h1>
-
-  <form id="studentForm">
-    <input type="text" id="name" placeholder="Full Name" required>
-    <input type="text" id="phone" placeholder="Phone Number" required>
-    <input type="email" id="email" placeholder="Email Address">
-    <input type="text" id="course" placeholder="Interested Course">
-    <textarea id="query" placeholder="Student Query / Message" rows="3"></textarea>
-    <select id="status">
-      <option value="remaining">Remaining</option>
-      <option value="called">Called</option>
-    </select>
-    <button type="submit">Save Student</button>
-    <div id="notification" class="notification"></div>
-  </form>
-
-  <table id="studentTable">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Date</th>
-        <th>Name</th>
-        <th>Phone</th>
-        <th>Email</th>
-        <th>Course</th>
-        <th>Query</th>
-        <th>Status</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-
-  <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwP-CAWxROgLh3Z2A4Zt9Y9d4g3LAVDPF8WgKdeZ5U_A6RN9uB5i6qUEOKsJx-cheokfQ/exec';
-
-    // Show notification
-    function showNotification(message, isSuccess = true) {
-      const note = document.getElementById('notification');
-      note.textContent = message;
-      note.className = `notification ${isSuccess ? 'success' : 'error'}`;
-      note.style.display = 'block';
-      setTimeout(() => (note.style.display = 'none'), 3000);
-    }
-
-    // Save student data
-    document.getElementById('studentForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const studentData = {
-        name: document.getElementById('name').value.trim(),
-        phone: document.getElementById('phone').value.trim(),
-        email: document.getElementById('email').value.trim(),
-        course: document.getElementById('course').value.trim(),
-        query: document.getElementById('query').value.trim(),
-        status: document.getElementById('status').value
-      };
-
-      try {
-        const res = await fetch(scriptURL, {
-          method: 'POST',
-          body: JSON.stringify(studentData)
-        });
-        const result = await res.json();
-
-        if (result.success) {
-          showNotification('✅ Student data saved successfully!', true);
-          document.getElementById('studentForm').reset();
-          fetchData();
-        } else {
-          showNotification('❌ Error: ' + (result.error || 'Saving failed'), false);
+    <script>
+        // Google Apps Script URL - Make sure this is correct
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyvtRLTG5LbhdQXrBfJ02qVUZQnCPnZOKGY0khPy_P51loFdUdBCS2Phps55qEQmloXfA/exec';
+        
+        // DOM Elements
+        const studentForm = document.getElementById('studentForm');
+        const studentsTableBody = document.getElementById('studentsTableBody');
+        const searchInput = document.getElementById('searchInput');
+        const statusFilter = document.getElementById('statusFilter');
+        const refreshBtn = document.getElementById('refreshBtn');
+        const clearDataBtn = document.getElementById('clearDataBtn');
+        const notification = document.getElementById('notification');
+        const totalStudentsEl = document.getElementById('totalStudents');
+        const calledStudentsEl = document.getElementById('calledStudents');
+        const remainingStudentsEl = document.getElementById('remainingStudents');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        // Initialize the application
+        function init() {
+            loadStudentsFromSheet();
+            
+            // Event listeners
+            studentForm.addEventListener('submit', handleFormSubmit);
+            searchInput.addEventListener('input', filterStudents);
+            statusFilter.addEventListener('change', filterStudents);
+            refreshBtn.addEventListener('click', loadStudentsFromSheet);
+            clearDataBtn.addEventListener('click', clearLocalData);
         }
-      } catch (error) {
-        showNotification('❌ Failed to connect to server', false);
-      }
-    });
-
-    // Fetch data
-    async function fetchData() {
-      try {
-        const res = await fetch(scriptURL);
-        const data = await res.json();
-        const tbody = document.querySelector('#studentTable tbody');
-        tbody.innerHTML = '';
-
-        if (data.success && data.data.length > 0) {
-          data.data.forEach((s, index) => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-              <td>${index + 1}</td>
-              <td>${new Date(s.date).toLocaleString()}</td>
-              <td>${s.name}</td>
-              <td>${s.phone}</td>
-              <td>${s.email}</td>
-              <td>${s.course}</td>
-              <td>${s.query}</td>
-              <td>${s.status}</td>
-              <td>
-                <button class="status-btn called" onclick="updateStatus(${s.id}, 'called')">Called</button>
-                <button class="status-btn remaining" onclick="updateStatus(${s.id}, 'remaining')">Remaining</button>
-              </td>
-            `;
-            tbody.appendChild(row);
-          });
-        } else {
-          tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;">No student data found.</td></tr>';
+        
+        // Handle form submission
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
+            const course = document.getElementById('course').value;
+            const query = document.getElementById('query').value;
+            
+            // Check if student with same phone already exists
+            const existingStudents = JSON.parse(localStorage.getItem('students')) || [];
+            const duplicate = existingStudents.find(student => 
+                student.phone === phone && student.course === course
+            );
+            
+            if (duplicate) {
+                showNotification('This student with the same phone number and course already exists!', 'error');
+                return;
+            }
+            
+            const newStudent = {
+                name,
+                phone,
+                email: email || 'Not provided',
+                course,
+                query,
+                status: "remaining",
+                date: new Date().toISOString().split('T')[0],
+                timestamp: new Date().toISOString()
+            };
+            
+            // Show loading state
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<span class="loading"></span> Saving...';
+            submitBtn.disabled = true;
+            
+            try {
+                // Send data to Google Sheets using FormData format
+                const formData = new FormData();
+                formData.append('name', name);
+                formData.append('phone', phone);
+                formData.append('email', email || 'Not provided');
+                formData.append('course', course);
+                formData.append('query', query);
+                formData.append('status', 'remaining');
+                formData.append('date', new Date().toISOString().split('T')[0]);
+                formData.append('timestamp', new Date().toISOString());
+                
+                const response = await fetch(scriptURL, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    showNotification('Student data saved successfully to Google Sheets!', 'success');
+                    
+                    // Reset form
+                    studentForm.reset();
+                    
+                    // Reload data from sheet
+                    setTimeout(loadStudentsFromSheet, 1000);
+                } else {
+                    throw new Error('Failed to save to Google Sheets');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('Error saving data. Please try again.', 'error');
+                
+                // Save locally as fallback
+                const students = JSON.parse(localStorage.getItem('students')) || [];
+                newStudent.id = Date.now().toString();
+                students.push(newStudent);
+                localStorage.setItem('students', JSON.stringify(students));
+                renderStudentsTable(students);
+                updateStats();
+                showNotification('Data saved locally only', 'warning');
+            } finally {
+                // Restore button state
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
         }
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-    // Update call status
-    async function updateStatus(id, status) {
-      try {
-        const res = await fetch(scriptURL, {
-          method: 'POST',
-          body: JSON.stringify({ action: 'updateStatus', id, status })
-        });
-        const result = await res.json();
-
-        if (result.success) {
-          showNotification(`✅ Status updated to "${status}"`, true);
-          fetchData();
-        } else {
-          showNotification('❌ Failed to update status', false);
+        
+        // Load students from Google Sheets
+        async function loadStudentsFromSheet() {
+            try {
+                refreshBtn.innerHTML = '<span class="loading"></span> Loading...';
+                refreshBtn.disabled = true;
+                
+                const response = await fetch(scriptURL);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data && data.success && Array.isArray(data.data)) {
+                    // Save to localStorage for offline access
+                    localStorage.setItem('students', JSON.stringify(data.data));
+                    renderStudentsTable(data.data);
+                    updateStats();
+                    showNotification('Data loaded successfully from Google Sheets!', 'success');
+                } else {
+                    // Check if the response is in a different format
+                    if (Array.isArray(data)) {
+                        localStorage.setItem('students', JSON.stringify(data));
+                        renderStudentsTable(data);
+                        updateStats();
+                        showNotification('Data loaded successfully from Google Sheets!', 'success');
+                    } else {
+                        throw new Error('Invalid data format received from server');
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading data:', error);
+                
+                // Fallback to localStorage data
+                const localData = JSON.parse(localStorage.getItem('students')) || [];
+                renderStudentsTable(localData);
+                updateStats();
+                showNotification('Using local data. Could not connect to Google Sheets.', 'error');
+            } finally {
+                refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh Data';
+                refreshBtn.disabled = false;
+            }
         }
-      } catch (error) {
-        showNotification('❌ Connection error while updating', false);
-      }
-    }
-
-    // Load table on page load
-    fetchData();
-  </script>
-
+        
+        // Render students table
+        function renderStudentsTable(studentsData = []) {
+            if (studentsData.length === 0) {
+                studentsTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 30px;">
+                            <i class="fas fa-inbox" style="font-size: 3rem; color: #dee2e6; margin-bottom: 15px;"></i>
+                            <p>No student records found.</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            studentsTableBody.innerHTML = studentsData.map(student => `
+                <tr>
+                    <td>
+                        <strong>${student.name}</strong>
+                        <div style="font-size: 0.8rem; color: #6c757d;">${student.email}</div>
+                    </td>
+                    <td>${student.phone}</td>
+                    <td>${student.course}</td>
+                    <td>
+                        <span class="status-badge status-${student.status}">
+                            ${student.status === 'called' ? 'Called' : 'Remaining'}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="action-btn ${student.status === 'called' ? 'btn-success' : 'btn-warning'}" 
+                                    onclick="updateStatus('${student.id || student.timestamp}', '${student.status}')">
+                                ${student.status === 'called' ? 'Called' : 'Mark as Called'}
+                            </button>
+                            <button class="action-btn" onclick="viewDetails(${JSON.stringify(student).replace(/"/g, '&quot;')})">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        // Filter students based on search and status
+        function filterStudents() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const statusValue = statusFilter.value;
+            
+            const students = JSON.parse(localStorage.getItem('students')) || [];
+            
+            const filtered = students.filter(student => {
+                const matchesSearch = student.name.toLowerCase().includes(searchTerm) ||
+                                    student.phone.includes(searchTerm) ||
+                                    student.course.toLowerCase().includes(searchTerm);
+                
+                const matchesStatus = statusValue === 'all' || student.status === statusValue;
+                
+                return matchesSearch && matchesStatus;
+            });
+            
+            renderStudentsTable(filtered);
+        }
+        
+        // Update student call status
+        async function updateStatus(id, currentStatus) {
+            const newStatus = currentStatus === 'called' ? 'remaining' : 'called';
+            
+            try {
+                const formData = new FormData();
+                formData.append('action', 'updateStatus');
+                formData.append('id', id);
+                formData.append('status', newStatus);
+                
+                const response = await fetch(scriptURL, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    showNotification(`Status updated successfully!`, 'success');
+                    // Reload data from sheet
+                    setTimeout(loadStudentsFromSheet, 500);
+                } else {
+                    throw new Error('Failed to update status');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('Error updating status. Please try again.', 'error');
+                
+                // Update locally as fallback
+                const students = JSON.parse(localStorage.getItem('students')) || [];
+                const studentIndex = students.findIndex(s => (s.id === id) || (s.timestamp === id));
+                if (studentIndex !== -1) {
+                    students[studentIndex].status = newStatus;
+                    localStorage.setItem('students', JSON.stringify(students));
+                    renderStudentsTable(students);
+                    updateStats();
+                    showNotification('Status updated locally only', 'warning');
+                }
+            }
+        }
+        
+        // View student details
+        function viewDetails(student) {
+            if (typeof student === 'string') {
+                student = JSON.parse(student);
+            }
+            
+            alert(`
+                Student Details:
+                
+                Name: ${student.name}
+                Phone: ${student.phone}
+                Email: ${student.email}
+                Course: ${student.course}
+                Query: ${student.query}
+                Status: ${student.status === 'called' ? 'Called' : 'Remaining to Call'}
+                Date: ${student.date}
+            `);
+        }
+        
+        // Update statistics
+        function updateStats() {
+            const students = JSON.parse(localStorage.getItem('students')) || [];
+            const total = students.length;
+            const called = students.filter(s => s.status === 'called').length;
+            const remaining = total - called;
+            
+            totalStudentsEl.textContent = total;
+            calledStudentsEl.textContent = called;
+            remainingStudentsEl.textContent = remaining;
+        }
+        
+        // Clear local data
+        function clearLocalData() {
+            if (confirm('Are you sure you want to clear ALL local student records? This will not affect data in Google Sheets.')) {
+                localStorage.removeItem('students');
+                renderStudentsTable();
+                updateStats();
+                showNotification('Local data cleared', 'success');
+            }
+        }
+        
+        // Show notification
+        function showNotification(message, type) {
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
 </body>
 </html>
