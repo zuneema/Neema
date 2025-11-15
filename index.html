@@ -473,8 +473,8 @@
     <div class="notification" id="notification"></div>
 
     <script>
-        // REPLACE THIS WITH YOUR NEW DEPLOYMENT URL
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbyqUtMPeI59ABZVthQkGq07oIzscExkLvFB47_U2DFbxzx-zYPyVd_8Ewh_3o3srsWmPg/exec';
+        // REPLACE THIS WITH YOUR ACTUAL DEPLOYMENT URL
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyIRUQO0OMM91IT-7wJT3sb-MCxPcPV7hgTrQ5hMzncQlXaTUNOTtgTJsGFnIkBLLcaaA/exec';
         
         const studentForm = document.getElementById('studentForm');
         const studentsTableBody = document.getElementById('studentsTableBody');
@@ -499,6 +499,7 @@
 
         async function handleFormSubmit(e) {
             e.preventDefault();
+            console.log('Form submitted');
 
             const newStudent = {
                 name: document.getElementById('name').value.trim(),
@@ -510,6 +511,8 @@
                 date: new Date().toISOString().split('T')[0],
                 timestamp: new Date().toISOString()
             };
+
+            console.log('New student data:', newStudent);
 
             // Check for duplicates in local storage first
             const localStudents = JSON.parse(localStorage.getItem('students') || '[]');
@@ -523,6 +526,8 @@
             submitBtn.disabled = true;
 
             try {
+                console.log('Attempting to save to Google Sheets...');
+                
                 // Try to save to Google Sheets first
                 const response = await fetch(scriptURL, {
                     method: 'POST',
@@ -532,11 +537,15 @@
                     body: JSON.stringify(newStudent)
                 });
 
+                console.log('Response status:', response.status);
+                console.log('Response ok:', response.ok);
+
                 if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
+                    throw new Error(`HTTP ${response.status} - ${response.statusText}`);
                 }
 
                 const result = await response.json();
+                console.log('Response result:', result);
 
                 if (result.success) {
                     // Successfully saved to Google Sheets
@@ -573,13 +582,18 @@
                 refreshBtn.innerHTML = '<span class="loading"></span> Loading...';
                 refreshBtn.disabled = true;
 
+                console.log('Loading data from Google Sheets...');
                 const response = await fetch(scriptURL);
+                console.log('Load response status:', response.status);
+
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
                 const result = await response.json();
+                console.log('Load result:', result);
 
                 if (result.success) {
                     const data = result.data || [];
+                    console.log('Loaded data:', data);
                     localStorage.setItem('students', JSON.stringify(data));
                     renderStudentsTable(data);
                     updateStats();
