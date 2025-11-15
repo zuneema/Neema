@@ -6,7 +6,7 @@
     <title>Student Data Collection System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Your CSS remains exactly the same */
+        /* Your existing CSS - keep it exactly as you had it */
         :root {
             --primary: #4361ee;
             --secondary: #3f37c9;
@@ -473,254 +473,271 @@
     <div class="notification" id="notification"></div>
 
     <script>
-        // REPLACE THIS WITH YOUR ACTUAL DEPLOYMENT URL
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbyIRUQO0OMM91IT-7wJT3sb-MCxPcPV7hgTrQ5hMzncQlXaTUNOTtgTJsGFnIkBLLcaaA/exec';
+        // REPLACE THIS WITH YOUR NEW DEPLOYMENT URL
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwOog3ArEkWyejYLu9aW_gSBvtGV2E87nNb3Pn_k6FdKSQkgk76U5_a0A7cmxInK5opJw/exec';
         
-        const studentForm = document.getElementById('studentForm');
-        const studentsTableBody = document.getElementById('studentsTableBody');
-        const searchInput = document.getElementById('searchInput');
-        const statusFilter = document.getElementById('statusFilter');
-        const refreshBtn = document.getElementById('refreshBtn');
-        const clearDataBtn = document.getElementById('clearDataBtn');
-        const notification = document.getElementById('notification');
-        const totalStudentsEl = document.getElementById('totalStudents');
-        const calledStudentsEl = document.getElementById('calledStudents');
-        const remainingStudentsEl = document.getElementById('remainingStudents');
-        const submitBtn = document.getElementById('submitBtn');
+        let students = JSON.parse(localStorage.getItem('students') || '[]');
+        
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStudents();
+            setupEventListeners();
+        });
 
-        function init() {
-            loadStudentsFromSheet();
-            studentForm.addEventListener('submit', handleFormSubmit);
-            searchInput.addEventListener('input', filterStudents);
-            statusFilter.addEventListener('change', filterStudents);
-            refreshBtn.addEventListener('click', loadStudentsFromSheet);
-            clearDataBtn.addEventListener('click', clearLocalData);
+        function setupEventListeners() {
+            document.getElementById('studentForm').addEventListener('submit', saveStudent);
+            document.getElementById('refreshBtn').addEventListener('click', loadStudents);
+            document.getElementById('clearDataBtn').addEventListener('click', clearLocalData);
+            document.getElementById('searchInput').addEventListener('input', filterStudents);
+            document.getElementById('statusFilter').addEventListener('change', filterStudents);
         }
 
-        async function handleFormSubmit(e) {
+        async function saveStudent(e) {
             e.preventDefault();
-            console.log('Form submitted');
-
-            const newStudent = {
+            
+            const student = {
                 name: document.getElementById('name').value.trim(),
                 phone: document.getElementById('phone').value.trim(),
-                email: (document.getElementById('email').value || 'Not provided').trim(),
+                email: document.getElementById('email').value.trim() || 'Not provided',
                 course: document.getElementById('course').value,
                 query: document.getElementById('query').value.trim(),
-                status: "remaining",
-                date: new Date().toISOString().split('T')[0],
+                status: 'remaining',
+                date: new Date().toLocaleDateString(),
                 timestamp: new Date().toISOString()
             };
 
-            console.log('New student data:', newStudent);
-
-            // Check for duplicates in local storage first
-            const localStudents = JSON.parse(localStorage.getItem('students') || '[]');
-            if (localStudents.some(s => s.phone === newStudent.phone && s.course === newStudent.course)) {
+            // Check for duplicates
+            if (students.some(s => s.phone === student.phone && s.course === student.course)) {
                 showNotification('Student with same phone & course already exists!', 'error');
                 return;
             }
 
-            const original = submitBtn.innerHTML;
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.innerHTML;
             submitBtn.innerHTML = '<span class="loading"></span> Saving...';
             submitBtn.disabled = true;
 
             try {
-                console.log('Attempting to save to Google Sheets...');
-                
-                // Try to save to Google Sheets first
+                // Try to save to Google Sheets
                 const response = await fetch(scriptURL, {
                     method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json'
+                    headers: {
+                        'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(newStudent)
+                    body: JSON.stringify(student)
                 });
 
-                console.log('Response status:', response.status);
-                console.log('Response ok:', response.ok);
-
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status} - ${response.statusText}`);
-                }
-
                 const result = await response.json();
-                console.log('Response result:', result);
-
+                
                 if (result.success) {
-                    // Successfully saved to Google Sheets
-                    newStudent.id = result.id;
-                    
-                    // Refresh data from Google Sheets to ensure consistency
-                    await loadStudentsFromSheet();
-                    
-                    showNotification('Student data saved to Google Sheets!', 'success');
-                    studentForm.reset();
+                    student.id = result.id;
+                    showNotification('Student saved to Google Sheets!', 'success');
+                    document.getElementById('studentForm').reset();
+                    await loadStudents(); // Reload data from Sheets
                 } else {
-                    throw new Error(result.error || 'Save failed');
+                    throw new Error(result.error);
                 }
-            } catch (err) {
-                console.error('Google Sheets save failed:', err);
-                
-                // Fallback: Save to local storage
-                newStudent.id = 'local-' + Date.now().toString();
-                const localStudents = JSON.parse(localStorage.getItem('students') || '[]');
-                localStudents.push(newStudent);
-                localStorage.setItem('students', JSON.stringify(localStudents));
-                
-                renderStudentsTable(localStudents);
+            } catch (error) {
+                console.error('Error saving to Google Sheets:', error);
+                // Fallback to local storage
+                student.id = 'local-' + Date.now();
+                students.push(student);
+                localStorage.setItem('students', JSON.stringify(students));
+                renderStudents();
                 updateStats();
-                showNotification('Saved to local storage (Google Sheets unavailable)', 'warning');
+                showNotification('Saved locally (Google Sheets unavailable)', 'warning');
             } finally {
-                submitBtn.innerHTML = original;
+                submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
             }
         }
 
-        async function loadStudentsFromSheet() {
+        async function loadStudents() {
+            const refreshBtn = document.getElementById('refreshBtn');
+            const originalText = refreshBtn.innerHTML;
+            refreshBtn.innerHTML = '<span class="loading"></span> Loading...';
+            refreshBtn.disabled = true;
+
             try {
-                refreshBtn.innerHTML = '<span class="loading"></span> Loading...';
-                refreshBtn.disabled = true;
-
-                console.log('Loading data from Google Sheets...');
                 const response = await fetch(scriptURL);
-                console.log('Load response status:', response.status);
-
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
                 const result = await response.json();
-                console.log('Load result:', result);
-
+                
                 if (result.success) {
-                    const data = result.data || [];
-                    console.log('Loaded data:', data);
-                    localStorage.setItem('students', JSON.stringify(data));
-                    renderStudentsTable(data);
+                    students = result.data;
+                    localStorage.setItem('students', JSON.stringify(students));
+                    renderStudents();
                     updateStats();
                     showNotification('Data loaded from Google Sheets', 'success');
                 } else {
                     throw new Error(result.error);
                 }
-            } catch (err) {
-                console.error('Failed to load from Google Sheets:', err);
-                const localStudents = JSON.parse(localStorage.getItem('students') || '[]');
-                renderStudentsTable(localStudents);
+            } catch (error) {
+                console.error('Error loading from Google Sheets:', error);
+                students = JSON.parse(localStorage.getItem('students') || '[]');
+                renderStudents();
                 updateStats();
-                showNotification('Using local data (Google Sheets unavailable)', 'error');
+                showNotification('Using local data', 'error');
             } finally {
-                refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh Data';
+                refreshBtn.innerHTML = originalText;
                 refreshBtn.disabled = false;
             }
         }
 
-        function renderStudentsTable(students = []) {
-            if (!students.length) {
-                studentsTableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:30px;">
-                    <i class="fas fa-inbox" style="font-size:3rem;color:#dee2e6;margin-bottom:15px;"></i>
-                    <p>No student records found.</p></td></tr>`;
+        function renderStudents() {
+            const tbody = document.getElementById('studentsTableBody');
+            if (students.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">No students found</td></tr>';
                 return;
             }
 
-            studentsTableBody.innerHTML = students.map(s => `
+            tbody.innerHTML = students.map(student => `
                 <tr>
-                    <td><strong>${s.name}</strong><div style="font-size:0.8rem;color:#6c757d;">${s.email}</div></td>
-                    <td>${s.phone}</td>
-                    <td>${s.course}</td>
-                    <td><span class="status-badge status-${s.status}">${s.status === 'called' ? 'Called' : 'Remaining'}</span></td>
+                    <td>
+                        <strong>${student.name}</strong>
+                        <div style="font-size: 0.8rem; color: #6c757d;">${student.email}</div>
+                    </td>
+                    <td>${student.phone}</td>
+                    <td>${student.course}</td>
+                    <td>
+                        <span class="status-badge status-${student.status}">
+                            ${student.status === 'called' ? 'Called' : 'Remaining'}
+                        </span>
+                    </td>
                     <td>
                         <div class="action-buttons">
-                            <button class="action-btn ${s.status === 'called' ? 'btn-success' : 'btn-warning'}"
-                                    onclick="updateStatus('${s.id}', '${s.status}')">
-                                ${s.status === 'called' ? 'Called' : 'Mark as Called'}
+                            <button class="action-btn ${student.status === 'called' ? 'btn-success' : 'btn-warning'}" 
+                                    onclick="toggleStatus('${student.id}')">
+                                ${student.status === 'called' ? 'Called' : 'Mark Called'}
                             </button>
-                            <button class="action-btn" onclick="viewDetails('${btoa(JSON.stringify(s))}')">
+                            <button class="action-btn" onclick="viewDetails('${student.id}')">
                                 <i class="fas fa-eye"></i>
                             </button>
                         </div>
                     </td>
-                </tr>`).join('');
+                </tr>
+            `).join('');
         }
 
-        async function updateStatus(id, current) {
-            const newStatus = current === 'called' ? 'remaining' : 'called';
-
+        async function toggleStatus(studentId) {
+            const newStatus = students.find(s => s.id === studentId).status === 'called' ? 'remaining' : 'called';
+            
             try {
                 const response = await fetch(scriptURL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'updateStatus', id, status: newStatus })
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'updateStatus',
+                        id: studentId,
+                        status: newStatus
+                    })
                 });
 
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
                 const result = await response.json();
-
+                
                 if (result.success) {
-                    showNotification('Status updated in Google Sheets!', 'success');
-                    await loadStudentsFromSheet();
+                    await loadStudents(); // Reload from Sheets
+                    showNotification('Status updated!', 'success');
                 } else {
                     throw new Error(result.error);
                 }
-            } catch (err) {
-                console.error('Google Sheets update failed:', err);
-                const allStudents = JSON.parse(localStorage.getItem('students') || '[]');
-                const studentIndex = allStudents.findIndex(x => x.id === id);
-                if (studentIndex > -1) {
-                    allStudents[studentIndex].status = newStatus;
-                    localStorage.setItem('students', JSON.stringify(allStudents));
-                    renderStudentsTable(allStudents);
+            } catch (error) {
+                console.error('Error updating status:', error);
+                // Fallback to local update
+                const student = students.find(s => s.id === studentId);
+                if (student) {
+                    student.status = newStatus;
+                    localStorage.setItem('students', JSON.stringify(students));
+                    renderStudents();
                     updateStats();
                     showNotification('Status updated locally', 'warning');
                 }
             }
         }
 
-        function filterStudents() {
-            const term = searchInput.value.toLowerCase();
-            const filter = statusFilter.value;
-            const allStudents = JSON.parse(localStorage.getItem('students') || '[]');
+        function viewDetails(studentId) {
+            const student = students.find(s => s.id === studentId);
+            if (student) {
+                alert(`Name: ${student.name}\nPhone: ${student.phone}\nEmail: ${student.email}\nCourse: ${student.course}\nQuery: ${student.query}\nStatus: ${student.status}\nDate: ${student.date}`);
+            }
+        }
 
-            const filtered = allStudents.filter(s => {
-                const matchSearch = s.name.toLowerCase().includes(term) ||
-                                    s.phone.includes(term) ||
-                                    s.course.toLowerCase().includes(term);
-                const matchStatus = filter === 'all' || s.status === filter;
-                return matchSearch && matchStatus;
+        function filterStudents() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+            
+            const filtered = students.filter(student => {
+                const matchesSearch = student.name.toLowerCase().includes(searchTerm) ||
+                                    student.phone.includes(searchTerm) ||
+                                    student.course.toLowerCase().includes(searchTerm);
+                const matchesStatus = statusFilter === 'all' || student.status === statusFilter;
+                return matchesSearch && matchesStatus;
             });
-            renderStudentsTable(filtered);
+            
+            renderFilteredStudents(filtered);
+        }
+
+        function renderFilteredStudents(filteredStudents) {
+            const tbody = document.getElementById('studentsTableBody');
+            if (filteredStudents.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">No matching students found</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = filteredStudents.map(student => `
+                <tr>
+                    <td>
+                        <strong>${student.name}</strong>
+                        <div style="font-size: 0.8rem; color: #6c757d;">${student.email}</div>
+                    </td>
+                    <td>${student.phone}</td>
+                    <td>${student.course}</td>
+                    <td>
+                        <span class="status-badge status-${student.status}">
+                            ${student.status === 'called' ? 'Called' : 'Remaining'}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="action-btn ${student.status === 'called' ? 'btn-success' : 'btn-warning'}" 
+                                    onclick="toggleStatus('${student.id}')">
+                                ${student.status === 'called' ? 'Called' : 'Mark Called'}
+                            </button>
+                            <button class="action-btn" onclick="viewDetails('${student.id}')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
         }
 
         function updateStats() {
-            const allStudents = JSON.parse(localStorage.getItem('students') || '[]');
-            const total = allStudents.length;
-            const called = allStudents.filter(s => s.status === 'called').length;
-            totalStudentsEl.textContent = total;
-            calledStudentsEl.textContent = called;
-            remainingStudentsEl.textContent = total - called;
+            document.getElementById('totalStudents').textContent = students.length;
+            const calledCount = students.filter(s => s.status === 'called').length;
+            document.getElementById('calledStudents').textContent = calledCount;
+            document.getElementById('remainingStudents').textContent = students.length - calledCount;
         }
 
         function clearLocalData() {
-            if (confirm('Clear all local data? (Google Sheets data will remain intact)')) {
+            if (confirm('Clear all local data? Google Sheets data will remain intact.')) {
                 localStorage.removeItem('students');
-                renderStudentsTable();
+                students = [];
+                renderStudents();
                 updateStats();
                 showNotification('Local data cleared', 'success');
             }
         }
 
-        function viewDetails(encoded) {
-            try {
-                const student = JSON.parse(atob(encoded));
-                alert(`Student Details:\n\nName: ${student.name}\nPhone: ${student.phone}\nEmail: ${student.email}\nCourse: ${student.course}\nQuery: ${student.query}\nStatus: ${student.status === 'called' ? 'Called' : 'Remaining'}\nDate: ${student.date}`);
-            } catch (e) { console.error(e); }
-        }
-
-        function showNotification(msg, type) {
-            notification.textContent = msg;
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
             notification.className = `notification ${type} show`;
-            setTimeout(() => notification.classList.remove('show'), 3000);
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
         }
-
-        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
