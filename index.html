@@ -6,7 +6,7 @@
     <title>Student Data Collection System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Your existing CSS - keep it exactly as you had it */
+        /* Your existing CSS remains the same */
         :root {
             --primary: #4361ee;
             --secondary: #3f37c9;
@@ -157,14 +157,6 @@
        
         .btn-danger:hover {
             background-color: #c1121f;
-        }
-       
-        .btn-warning {
-            background-color: var(--warning);
-        }
-       
-        .btn-warning:hover {
-            background-color: #e59400;
         }
        
         .table-container {
@@ -322,11 +314,6 @@
             background-color: var(--danger);
         }
        
-        .notification.warning {
-            background-color: var(--warning);
-            color: #000;
-        }
-       
         .loading {
             display: inline-block;
             width: 20px;
@@ -455,9 +442,6 @@
                         <button class="btn" id="refreshBtn">
                             <i class="fas fa-sync-alt"></i> Refresh Data
                         </button>
-                        <button class="btn btn-danger" id="clearDataBtn">
-                            <i class="fas fa-trash"></i> Clear Local Data
-                        </button>
                     </div>
                 </div>
             </div>
@@ -473,79 +457,91 @@
     <div class="notification" id="notification"></div>
 
     <script>
-        // REPLACE THIS WITH YOUR NEW DEPLOYMENT URL
+        // REPLACE THIS WITH YOUR ACTUAL GOOGLE APPS SCRIPT URL
         const scriptURL = 'https://script.google.com/macros/s/AKfycbwr_uI70xjE2ybH_j5JwnUrXEWJB9bCSB4Rk2W7MNyNvMuzq9Mk312XOMRwKq4LNPNi/exec';
         
-        let students = JSON.parse(localStorage.getItem('students') || '[]');
-        
-        // Initialize the app
-        document.addEventListener('DOMContentLoaded', function() {
-            loadStudents();
-            setupEventListeners();
-        });
+        let students = [];
 
-        function setupEventListeners() {
+        // Test connection on page load
+        async function testConnection() {
+            try {
+                const response = await fetch(scriptURL);
+                if (response.ok) {
+                    console.log('✅ Connected to Google Apps Script');
+                    return true;
+                }
+            } catch (error) {
+                console.error('❌ Cannot connect to Google Apps Script:', error);
+            }
+            return false;
+        }
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            const connected = await testConnection();
+            if (connected) {
+                await loadStudents();
+            } else {
+                showNotification('Cannot connect to Google Sheets. Please check your internet connection and Apps Script URL.', 'error');
+            }
+            
             document.getElementById('studentForm').addEventListener('submit', saveStudent);
             document.getElementById('refreshBtn').addEventListener('click', loadStudents);
-            document.getElementById('clearDataBtn').addEventListener('click', clearLocalData);
             document.getElementById('searchInput').addEventListener('input', filterStudents);
             document.getElementById('statusFilter').addEventListener('change', filterStudents);
-        }
+        });
 
         async function saveStudent(e) {
             e.preventDefault();
             
-            const student = {
+            const studentData = {
                 name: document.getElementById('name').value.trim(),
                 phone: document.getElementById('phone').value.trim(),
                 email: document.getElementById('email').value.trim() || 'Not provided',
                 course: document.getElementById('course').value,
-                query: document.getElementById('query').value.trim(),
-                status: 'remaining',
-                date: new Date().toLocaleDateString(),
-                timestamp: new Date().toISOString()
+                query: document.getElementById('query').value.trim()
             };
 
-            // Check for duplicates
-            if (students.some(s => s.phone === student.phone && s.course === student.course)) {
-                showNotification('Student with same phone & course already exists!', 'error');
+            // Validation
+            if (!studentData.name || !studentData.phone || !studentData.course || !studentData.query) {
+                showNotification('Please fill all required fields', 'error');
                 return;
             }
 
             const submitBtn = document.getElementById('submitBtn');
             const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<span class="loading"></span> Saving...';
+            submitBtn.innerHTML = '<span class="loading"></span> Saving to Google Sheets...';
             submitBtn.disabled = true;
 
             try {
-                // Try to save to Google Sheets
+                console.log('Sending data to Google Sheets...', studentData);
+                
                 const response = await fetch(scriptURL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(student)
+                    body: JSON.stringify(studentData)
                 });
 
+                console.log('Response status:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
                 const result = await response.json();
+                console.log('Response result:', result);
                 
                 if (result.success) {
-                    student.id = result.id;
-                    showNotification('Student saved to Google Sheets!', 'success');
+                    showNotification('✅ Student data saved successfully to Google Sheets!', 'success');
                     document.getElementById('studentForm').reset();
                     await loadStudents(); // Reload data from Sheets
                 } else {
-                    throw new Error(result.error);
+                    throw new Error(result.error || 'Failed to save student');
                 }
             } catch (error) {
-                console.error('Error saving to Google Sheets:', error);
-                // Fallback to local storage
-                student.id = 'local-' + Date.now();
-                students.push(student);
-                localStorage.setItem('students', JSON.stringify(students));
-                renderStudents();
-                updateStats();
-                showNotification('Saved locally (Google Sheets unavailable)', 'warning');
+                console.error('Error saving student:', error);
+                showNotification('❌ Error: Could not save to Google Sheets. ' + error.message, 'error');
             } finally {
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
@@ -560,23 +556,27 @@
 
             try {
                 const response = await fetch(scriptURL);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
                 const result = await response.json();
                 
                 if (result.success) {
                     students = result.data;
-                    localStorage.setItem('students', JSON.stringify(students));
                     renderStudents();
                     updateStats();
-                    showNotification('Data loaded from Google Sheets', 'success');
+                    showNotification('✅ Data loaded from Google Sheets', 'success');
                 } else {
                     throw new Error(result.error);
                 }
             } catch (error) {
-                console.error('Error loading from Google Sheets:', error);
-                students = JSON.parse(localStorage.getItem('students') || '[]');
+                console.error('Error loading students:', error);
+                showNotification('❌ Error loading data from Google Sheets', 'error');
+                students = [];
                 renderStudents();
                 updateStats();
-                showNotification('Using local data', 'error');
             } finally {
                 refreshBtn.innerHTML = originalText;
                 refreshBtn.disabled = false;
@@ -585,8 +585,9 @@
 
         function renderStudents() {
             const tbody = document.getElementById('studentsTableBody');
+            
             if (students.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">No students found</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px; color: #666;">No student records found in Google Sheets</td></tr>';
                 return;
             }
 
@@ -606,10 +607,10 @@
                     <td>
                         <div class="action-buttons">
                             <button class="action-btn ${student.status === 'called' ? 'btn-success' : 'btn-warning'}" 
-                                    onclick="toggleStatus('${student.id}')">
-                                ${student.status === 'called' ? 'Called' : 'Mark Called'}
+                                    onclick="updateStatus('${student.id}', '${student.status}')">
+                                ${student.status === 'called' ? 'Called' : 'Mark as Called'}
                             </button>
-                            <button class="action-btn" onclick="viewDetails('${student.id}')">
+                            <button class="action-btn" onclick="viewStudentDetails('${student.id}')">
                                 <i class="fas fa-eye"></i>
                             </button>
                         </div>
@@ -618,8 +619,8 @@
             `).join('');
         }
 
-        async function toggleStatus(studentId) {
-            const newStatus = students.find(s => s.id === studentId).status === 'called' ? 'remaining' : 'called';
+        async function updateStatus(studentId, currentStatus) {
+            const newStatus = currentStatus === 'called' ? 'remaining' : 'called';
             
             try {
                 const response = await fetch(scriptURL, {
@@ -637,29 +638,30 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    await loadStudents(); // Reload from Sheets
-                    showNotification('Status updated!', 'success');
+                    showNotification('✅ Status updated successfully!', 'success');
+                    await loadStudents();
                 } else {
                     throw new Error(result.error);
                 }
             } catch (error) {
                 console.error('Error updating status:', error);
-                // Fallback to local update
-                const student = students.find(s => s.id === studentId);
-                if (student) {
-                    student.status = newStatus;
-                    localStorage.setItem('students', JSON.stringify(students));
-                    renderStudents();
-                    updateStats();
-                    showNotification('Status updated locally', 'warning');
-                }
+                showNotification('❌ Error updating status', 'error');
             }
         }
 
-        function viewDetails(studentId) {
+        function viewStudentDetails(studentId) {
             const student = students.find(s => s.id === studentId);
             if (student) {
-                alert(`Name: ${student.name}\nPhone: ${student.phone}\nEmail: ${student.email}\nCourse: ${student.course}\nQuery: ${student.query}\nStatus: ${student.status}\nDate: ${student.date}`);
+                const details = `
+Name: ${student.name}
+Phone: ${student.phone}
+Email: ${student.email}
+Course: ${student.course}
+Query: ${student.query}
+Status: ${student.status}
+Date: ${student.date}
+                `;
+                alert(details);
             }
         }
 
@@ -667,7 +669,7 @@
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const statusFilter = document.getElementById('statusFilter').value;
             
-            const filtered = students.filter(student => {
+            const filteredStudents = students.filter(student => {
                 const matchesSearch = student.name.toLowerCase().includes(searchTerm) ||
                                     student.phone.includes(searchTerm) ||
                                     student.course.toLowerCase().includes(searchTerm);
@@ -675,13 +677,14 @@
                 return matchesSearch && matchesStatus;
             });
             
-            renderFilteredStudents(filtered);
+            renderFilteredStudents(filteredStudents);
         }
 
         function renderFilteredStudents(filteredStudents) {
             const tbody = document.getElementById('studentsTableBody');
+            
             if (filteredStudents.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">No matching students found</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px; color: #666;">No matching students found</td></tr>';
                 return;
             }
 
@@ -701,10 +704,10 @@
                     <td>
                         <div class="action-buttons">
                             <button class="action-btn ${student.status === 'called' ? 'btn-success' : 'btn-warning'}" 
-                                    onclick="toggleStatus('${student.id}')">
-                                ${student.status === 'called' ? 'Called' : 'Mark Called'}
+                                    onclick="updateStatus('${student.id}', '${student.status}')">
+                                ${student.status === 'called' ? 'Called' : 'Mark as Called'}
                             </button>
-                            <button class="action-btn" onclick="viewDetails('${student.id}')">
+                            <button class="action-btn" onclick="viewStudentDetails('${student.id}')">
                                 <i class="fas fa-eye"></i>
                             </button>
                         </div>
@@ -714,20 +717,13 @@
         }
 
         function updateStats() {
-            document.getElementById('totalStudents').textContent = students.length;
-            const calledCount = students.filter(s => s.status === 'called').length;
-            document.getElementById('calledStudents').textContent = calledCount;
-            document.getElementById('remainingStudents').textContent = students.length - calledCount;
-        }
-
-        function clearLocalData() {
-            if (confirm('Clear all local data? Google Sheets data will remain intact.')) {
-                localStorage.removeItem('students');
-                students = [];
-                renderStudents();
-                updateStats();
-                showNotification('Local data cleared', 'success');
-            }
+            const total = students.length;
+            const called = students.filter(s => s.status === 'called').length;
+            const remaining = total - called;
+            
+            document.getElementById('totalStudents').textContent = total;
+            document.getElementById('calledStudents').textContent = called;
+            document.getElementById('remainingStudents').textContent = remaining;
         }
 
         function showNotification(message, type) {
@@ -736,7 +732,7 @@
             notification.className = `notification ${type} show`;
             setTimeout(() => {
                 notification.classList.remove('show');
-            }, 3000);
+            }, 5000);
         }
     </script>
 </body>
