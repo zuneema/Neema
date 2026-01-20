@@ -5,16 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Management System</title>
     <style>
-        :root {
-            --primary: #4facfe;
-            --secondary: #00f2fe;
-            --success: #28a745;
-            --danger: #dc3545;
-            --warning: #ffc107;
-            --dark: #343a40;
-            --light: #f8f9fa;
-        }
-        
         * {
             margin: 0;
             padding: 0;
@@ -22,11 +12,10 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, var(--primary) 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             min-height: 100vh;
             padding: 20px;
-            color: var(--dark);
         }
 
         .container {
@@ -36,16 +25,10 @@
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
-            animation: fadeIn 0.5s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         header {
-            background: linear-gradient(to right, var(--primary) 0%, var(--secondary) 100%);
+            background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
             color: white;
             padding: 30px;
             text-align: center;
@@ -53,153 +36,88 @@
             overflow: hidden;
         }
 
-        header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
-            background-size: 50px 50px;
-            animation: float 20s linear infinite;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0) rotate(0deg); }
-            100% { transform: translateY(-50px) rotate(360deg); }
-        }
-
         h1 {
             font-size: 2.5em;
             margin-bottom: 10px;
-            position: relative;
-            z-index: 1;
         }
 
         .subtitle {
             font-size: 1.1em;
             opacity: 0.9;
             margin-bottom: 20px;
-            position: relative;
-            z-index: 1;
         }
 
         .clock-container {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.2);
             backdrop-filter: blur(10px);
             border-radius: 15px;
             padding: 15px 25px;
             display: inline-block;
-            border: 1px solid rgba(255,255,255,0.2);
-            position: relative;
-            z-index: 1;
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         .clock {
-            font-size: 1.2em;
+            font-size: 1.3em;
             font-weight: bold;
             font-family: 'Courier New', monospace;
         }
 
-        .config-section {
-            background: var(--light);
+        .status-section {
+            background: #f8f9fa;
             padding: 20px;
             border-bottom: 2px solid #dee2e6;
         }
 
-        .config-card {
+        .status-card {
             background: white;
-            padding: 25px;
+            padding: 20px;
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            border: 1px solid #e9ecef;
             max-width: 800px;
             margin: 0 auto;
         }
 
-        .url-display {
-            background: #f8f9fa;
-            border: 2px solid #dee2e6;
-            border-radius: 10px;
-            padding: 15px;
-            margin: 15px 0;
-            font-family: 'Courier New', monospace;
-            word-break: break-all;
-            font-size: 0.9em;
-            color: var(--dark);
-        }
-
-        .url-display.connected {
-            border-color: var(--success);
-            background: #d4edda;
-        }
-
-        .status-badge {
+        .status-indicator {
             display: inline-flex;
             align-items: center;
-            padding: 8px 16px;
+            padding: 8px 20px;
             border-radius: 25px;
             font-weight: 600;
             margin-left: 10px;
-        }
-
-        .status-connected {
-            background: var(--success);
-            color: white;
-        }
-
-        .status-disconnected {
-            background: var(--danger);
-            color: white;
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
             gap: 8px;
         }
 
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .btn-primary {
-            background: linear-gradient(to right, var(--primary) 0%, var(--secondary) 100%);
+        .connected {
+            background: linear-gradient(to right, #28a745, #20c997);
             color: white;
         }
 
-        .btn-success {
-            background: var(--success);
+        .disconnected {
+            background: linear-gradient(to right, #dc3545, #fd7e14);
             color: white;
         }
 
-        .btn-danger {
-            background: var(--danger);
+        .testing {
+            background: linear-gradient(to right, #17a2b8, #20c997);
             color: white;
         }
 
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
+        .url-display {
+            background: #f8f9fa;
+            border: 2px dashed #6c757d;
+            border-radius: 10px;
+            padding: 12px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+            font-size: 0.85em;
+            color: #495057;
         }
 
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 14px;
+        .url-display.connected {
+            border-color: #28a745;
+            border-style: solid;
+            background: #d4edda;
         }
 
         .main-content {
@@ -209,7 +127,7 @@
             padding: 30px;
         }
 
-        @media (max-width: 1024px) {
+        @media (max-width: 1100px) {
             .main-content {
                 grid-template-columns: 1fr;
             }
@@ -221,14 +139,13 @@
             padding: 25px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             border: 1px solid #e9ecef;
-            height: 100%;
         }
 
         .card h2 {
-            color: var(--dark);
+            color: #2c3e50;
             margin-bottom: 25px;
             padding-bottom: 15px;
-            border-bottom: 3px solid var(--primary);
+            border-bottom: 3px solid #4facfe;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -248,12 +165,6 @@
             gap: 5px;
         }
 
-        .required::after {
-            content: '*';
-            color: var(--danger);
-            margin-left: 4px;
-        }
-
         .form-control {
             width: 100%;
             padding: 12px 15px;
@@ -266,13 +177,66 @@
 
         .form-control:focus {
             outline: none;
-            border-color: var(--primary);
+            border-color: #4facfe;
             box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
         }
 
         textarea.form-control {
             min-height: 100px;
             resize: vertical;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(to right, #28a745, #20c997);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(to right, #dc3545, #fd7e14);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(to right, #6c757d, #adb5bd);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+
+        .btn-full {
+            width: 100%;
         }
 
         .filters {
@@ -297,11 +261,11 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 800px;
+            min-width: 1000px;
         }
 
         thead {
-            background: linear-gradient(to right, var(--primary) 0%, var(--secondary) 100%);
+            background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
         }
 
         th {
@@ -326,9 +290,9 @@
             padding: 12px 15px;
         }
 
-        .status-badge-small {
-            padding: 4px 10px;
-            border-radius: 15px;
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
             font-size: 12px;
             font-weight: 600;
             text-transform: uppercase;
@@ -352,7 +316,6 @@
         .actions {
             display: flex;
             gap: 8px;
-            flex-wrap: nowrap;
         }
 
         .loading {
@@ -365,7 +328,7 @@
             width: 40px;
             height: 40px;
             border: 3px solid #f3f3f3;
-            border-top: 3px solid var(--primary);
+            border-top: 3px solid #4facfe;
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 20px;
@@ -382,12 +345,6 @@
             color: #6c757d;
         }
 
-        .empty-state i {
-            font-size: 3em;
-            margin-bottom: 20px;
-            opacity: 0.5;
-        }
-
         .notification {
             position: fixed;
             top: 20px;
@@ -399,7 +356,7 @@
             z-index: 1000;
             opacity: 0;
             transform: translateX(100px);
-            transition: all 0.3s ease;
+            transition: all 0.3s;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -412,15 +369,15 @@
         }
 
         .notification.success {
-            background: var(--success);
+            background: linear-gradient(to right, #28a745, #20c997);
         }
 
         .notification.error {
-            background: var(--danger);
+            background: linear-gradient(to right, #dc3545, #fd7e14);
         }
 
         .notification.info {
-            background: var(--primary);
+            background: linear-gradient(to right, #4facfe, #00f2fe);
         }
 
         .stats {
@@ -436,12 +393,17 @@
             border-radius: 10px;
             text-align: center;
             border: 1px solid #e9ecef;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
         }
 
         .stat-value {
             font-size: 2em;
             font-weight: bold;
-            color: var(--primary);
+            color: #4facfe;
         }
 
         .stat-label {
@@ -450,39 +412,37 @@
             margin-top: 5px;
         }
 
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1001;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.show {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
         footer {
             text-align: center;
             padding: 20px;
             color: #6c757d;
             font-size: 0.9em;
             border-top: 1px solid #e9ecef;
+            background: #f8f9fa;
+        }
+
+        .debug-panel {
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .debug-toggle {
+            margin-top: 10px;
+            background: #495057;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -491,26 +451,32 @@
     <div class="container">
         <header>
             <h1><i class="fas fa-graduation-cap"></i> Student Management System</h1>
-            <p class="subtitle">Manage student data efficiently with Google Sheets backend</p>
+            <p class="subtitle">Google Sheets Backend • Live Timestamp • Real-time Updates</p>
             <div class="clock-container">
                 <div class="clock" id="liveClock"></div>
             </div>
         </header>
         
-        <div class="config-section">
-            <div class="config-card">
-                <h3><i class="fas fa-cog"></i> Configuration</h3>
-                <p>Your Web App URL is configured and ready to use:</p>
+        <div class="status-section">
+            <div class="status-card">
+                <h3><i class="fas fa-plug"></i> Connection Status</h3>
                 <div class="url-display" id="urlDisplay">
                     https://script.google.com/macros/s/AKfycbwJcjPMZ6PWew63rdWnP_hI9WgxFB2lXL31ALQJnNNzoVNeSSNTxAm4XMxwR1R2cw0B/exec
                 </div>
-                <div>
-                    <button class="btn btn-success" onclick="testConnection()">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <button class="btn btn-success" onclick="testConnection()" id="connectBtn">
                         <i class="fas fa-plug"></i> Test Connection
                     </button>
-                    <span id="connectionStatus" class="status-badge status-disconnected">
+                    <span id="connectionStatus" class="status-indicator disconnected">
                         <i class="fas fa-times-circle"></i> Not Connected
                     </span>
+                    <button class="btn btn-secondary" onclick="toggleDebug()" id="debugBtn">
+                        <i class="fas fa-bug"></i> Debug
+                    </button>
+                </div>
+                
+                <div class="debug-panel" id="debugPanel">
+                    <div id="debugOutput">Debug output will appear here...</div>
                 </div>
             </div>
         </div>
@@ -518,40 +484,40 @@
         <div class="main-content">
             <div class="form-section">
                 <div class="card">
-                    <h2><i class="fas fa-user-plus"></i> Student Form</h2>
+                    <h2><i class="fas fa-user-plus"></i> Add New Student</h2>
                     <form id="studentForm">
                         <input type="hidden" id="studentId">
                         
                         <div class="form-group">
-                            <label for="name" class="required">
-                                <i class="fas fa-user"></i> Full Name
+                            <label for="name">
+                                <i class="fas fa-user"></i> Full Name *
                             </label>
                             <input type="text" id="name" class="form-control" required 
-                                   placeholder="Enter student's full name">
+                                   placeholder="John Doe">
                         </div>
                         
                         <div class="form-group">
-                            <label for="phone" class="required">
-                                <i class="fas fa-phone"></i> Phone Number
+                            <label for="phone">
+                                <i class="fas fa-phone"></i> Phone Number *
                             </label>
                             <input type="tel" id="phone" class="form-control" required 
-                                   placeholder="Enter phone number">
+                                   placeholder="+1 234 567 8900">
                         </div>
                         
                         <div class="form-group">
-                            <label for="email" class="required">
-                                <i class="fas fa-envelope"></i> Email Address
+                            <label for="email">
+                                <i class="fas fa-envelope"></i> Email Address *
                             </label>
                             <input type="email" id="email" class="form-control" required 
-                                   placeholder="Enter email address">
+                                   placeholder="john@example.com">
                         </div>
                         
                         <div class="form-group">
-                            <label for="course" class="required">
-                                <i class="fas fa-book"></i> Course
+                            <label for="course">
+                                <i class="fas fa-book"></i> Course *
                             </label>
                             <select id="course" class="form-control" required>
-                                <option value="">Select a course</option>
+                                <option value="">Select Course</option>
                                 <option value="Computer Science">Computer Science</option>
                                 <option value="Information Technology">Information Technology</option>
                                 <option value="Engineering">Engineering</option>
@@ -568,7 +534,7 @@
                                 <i class="fas fa-question-circle"></i> Query/Question
                             </label>
                             <textarea id="query" class="form-control" 
-                                      placeholder="Enter any queries or questions"></textarea>
+                                      placeholder="Any questions or additional information..."></textarea>
                         </div>
                         
                         <div class="form-group">
@@ -583,11 +549,11 @@
                         </div>
                         
                         <div style="display: flex; gap: 10px; margin-top: 30px;">
-                            <button type="submit" class="btn btn-primary" style="flex: 1;">
-                                <i class="fas fa-save"></i> Save Student
+                            <button type="submit" class="btn btn-primary" style="flex: 2;">
+                                <i class="fas fa-save"></i> Save to Google Sheets
                             </button>
                             <button type="button" class="btn btn-secondary" onclick="resetForm()">
-                                <i class="fas fa-undo"></i> Clear
+                                <i class="fas fa-eraser"></i> Clear
                             </button>
                         </div>
                     </form>
@@ -596,7 +562,7 @@
             
             <div class="list-section">
                 <div class="card">
-                    <h2><i class="fas fa-list"></i> Student Records</h2>
+                    <h2><i class="fas fa-list-alt"></i> Student Records</h2>
                     
                     <div class="stats" id="stats">
                         <div class="stat-card">
@@ -615,8 +581,9 @@
                     
                     <div class="filters">
                         <input type="text" id="searchInput" class="form-control" 
-                               placeholder="Search by name, email, or course...">
-                        <select id="statusFilter" class="form-control">
+                               placeholder="🔍 Search by name, email, phone, or course..." 
+                               oninput="filterStudents()">
+                        <select id="statusFilter" class="form-control" onchange="filterStudents()">
                             <option value="">All Status</option>
                             <option value="Pending">Pending</option>
                             <option value="In Progress">In Progress</option>
@@ -629,7 +596,7 @@
                     
                     <div class="loading" id="loading">
                         <div class="spinner"></div>
-                        <p>Loading student data...</p>
+                        <p>Loading student data from Google Sheets...</p>
                     </div>
                     
                     <div class="table-container">
@@ -641,6 +608,7 @@
                                     <th>Phone</th>
                                     <th>Email</th>
                                     <th>Course</th>
+                                    <th>Query</th>
                                     <th>Status</th>
                                     <th>Date</th>
                                     <th>Time</th>
@@ -648,104 +616,52 @@
                                 </tr>
                             </thead>
                             <tbody id="studentsTableBody">
-                                <!-- Data will be loaded here -->
+                                <!-- Data loaded here -->
                             </tbody>
                         </table>
                     </div>
                     
                     <div class="empty-state" id="emptyState" style="display: none;">
-                        <i class="fas fa-users-slash"></i>
-                        <h3>No Students Found</h3>
+                        <div style="font-size: 4em; color: #dee2e6; margin-bottom: 20px;">
+                            <i class="fas fa-users-slash"></i>
+                        </div>
+                        <h3 style="color: #6c757d; margin-bottom: 10px;">No Students Found</h3>
                         <p>Add your first student using the form on the left!</p>
+                        <button class="btn btn-primary" onclick="scrollToForm()" style="margin-top: 20px;">
+                            <i class="fas fa-plus"></i> Add First Student
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
         
         <footer>
-            <p>Student Management System v1.0 | Connected to Google Sheets</p>
-            <p style="font-size: 0.8em; margin-top: 5px;">
-                <i class="fas fa-clock"></i> Live Timestamp | 
-                <i class="fas fa-database"></i> Google Sheets Backend
+            <p><i class="fas fa-database"></i> Google Sheets Backend | <i class="fas fa-clock"></i> Live Timestamp | <i class="fas fa-code"></i> Apps Script API</p>
+            <p style="font-size: 0.8em; margin-top: 5px; color: #adb5bd;">
+                All data is stored in your Google Sheet. Check your spreadsheet for updates!
             </p>
         </footer>
     </div>
     
     <div id="notification" class="notification">
-        <i class="fas fa-info-circle"></i>
+        <i class="fas fa-info-circle" id="notificationIcon"></i>
         <span id="notificationText"></span>
-    </div>
-    
-    <div class="modal" id="studentModal">
-        <div class="modal-content">
-            <h2><i class="fas fa-edit"></i> Edit Student</h2>
-            <form id="editForm">
-                <input type="hidden" id="editId">
-                
-                <div class="form-group">
-                    <label for="editName">Full Name</label>
-                    <input type="text" id="editName" class="form-control" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="editPhone">Phone Number</label>
-                    <input type="tel" id="editPhone" class="form-control" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="editEmail">Email Address</label>
-                    <input type="email" id="editEmail" class="form-control" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="editCourse">Course</label>
-                    <select id="editCourse" class="form-control" required>
-                        <option value="">Select a course</option>
-                        <option value="Computer Science">Computer Science</option>
-                        <option value="Information Technology">Information Technology</option>
-                        <option value="Engineering">Engineering</option>
-                        <option value="Business Administration">Business Administration</option>
-                        <option value="Medicine">Medicine</option>
-                        <option value="Arts">Arts</option>
-                        <option value="Science">Science</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="editQuery">Query/Question</label>
-                    <textarea id="editQuery" class="form-control"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="editStatus">Status</label>
-                    <select id="editStatus" class="form-control">
-                        <option value="Pending">Pending</option>
-                        <option value="In Progress">In Progress</option>
-                        <option value="Completed">Completed</option>
-                    </select>
-                </div>
-                
-                <div style="display: flex; gap: 10px; margin-top: 20px;">
-                    <button type="submit" class="btn btn-primary" style="flex: 1;">
-                        <i class="fas fa-save"></i> Update
-                    </button>
-                    <button type="button" class="btn btn-danger" onclick="closeModal()">
-                        <i class="fas fa-times"></i> Cancel
-                    </button>
-                </div>
-            </form>
-        </div>
     </div>
 
     <script>
-        // Web App URL - Using your provided URL
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwJcjPMZ6PWew63rdWnP_hI9WgxFB2lXL31ALQJnNNzoVNeSSNTxAm4XMxwR1R2cw0B/exec';
+        // ================================================
+        // Configuration
+        // ================================================
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyQIBmnXM4HNs4f5axU16C02zwXNaVBlUIm8Exuy-i9DZF1Xt7Z2WjH4dXre5_SVKTL/exec';
         
-        // Initialize connection status
+        // State variables
         let isConnected = false;
+        let allStudents = [];
+        let editMode = false;
         
-        // Live Clock Function
+        // ================================================
+        // Live Clock
+        // ================================================
         function updateClock() {
             const now = new Date();
             const clock = document.getElementById('liveClock');
@@ -762,75 +678,131 @@
             clock.textContent = now.toLocaleString('en-US', options);
         }
         
-        // Update clock every second
         setInterval(updateClock, 1000);
         updateClock();
         
+        // ================================================
+        // Debug Functions
+        // ================================================
+        function debugLog(message, type = 'info') {
+            const debugOutput = document.getElementById('debugOutput');
+            const timestamp = new Date().toLocaleTimeString();
+            const icon = type === 'error' ? '❌' : type === 'success' ? '✅' : 'ℹ️';
+            
+            debugOutput.innerHTML = `<span style="color: ${type === 'error' ? '#ff6b6b' : type === 'success' ? '#51cf66' : '#339af0'}">
+                ${icon} [${timestamp}] ${message}
+            </span><br>` + debugOutput.innerHTML;
+        }
+        
+        function toggleDebug() {
+            const panel = document.getElementById('debugPanel');
+            const btn = document.getElementById('debugBtn');
+            
+            if (panel.style.display === 'block') {
+                panel.style.display = 'none';
+                btn.innerHTML = '<i class="fas fa-bug"></i> Debug';
+            } else {
+                panel.style.display = 'block';
+                btn.innerHTML = '<i class="fas fa-times"></i> Hide Debug';
+            }
+        }
+        
+        // ================================================
         // Notification System
+        // ================================================
         function showNotification(message, type = 'info') {
             const notification = document.getElementById('notification');
             const notificationText = document.getElementById('notificationText');
+            const notificationIcon = document.getElementById('notificationIcon');
             
             notificationText.textContent = message;
             notification.className = `notification ${type}`;
             
-            // Add show class with a small delay for animation
+            // Set icon based on type
+            if (type === 'success') {
+                notificationIcon.className = 'fas fa-check-circle';
+            } else if (type === 'error') {
+                notificationIcon.className = 'fas fa-exclamation-circle';
+            } else {
+                notificationIcon.className = 'fas fa-info-circle';
+            }
+            
+            // Show notification
             setTimeout(() => {
                 notification.classList.add('show');
             }, 10);
             
-            // Auto hide after 5 seconds
+            // Auto hide after 4 seconds
             setTimeout(() => {
                 notification.classList.remove('show');
-            }, 5000);
+            }, 4000);
         }
         
-        // Test Connection Function
+        // ================================================
+        // Connection Management
+        // ================================================
         async function testConnection() {
             const statusEl = document.getElementById('connectionStatus');
+            const connectBtn = document.getElementById('connectBtn');
             const urlDisplay = document.getElementById('urlDisplay');
             
+            // Update UI to show testing
             statusEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Testing...';
-            statusEl.className = 'status-badge';
+            statusEl.className = 'status-indicator testing';
+            connectBtn.disabled = true;
+            connectBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Testing...';
+            
+            debugLog('Testing connection to Google Apps Script...');
             
             try {
-                // Test the connection
+                // Use GET request for testing
                 const response = await fetch(`${WEB_APP_URL}?method=test`);
                 
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
                 }
                 
                 const result = await response.json();
+                debugLog(`Response: ${JSON.stringify(result)}`);
                 
                 if (result.success) {
+                    // Success
                     isConnected = true;
-                    statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Connected';
-                    statusEl.className = 'status-badge status-connected';
+                    statusEl.innerHTML = `<i class="fas fa-check-circle"></i> Connected to "${result.sheetName}"`;
+                    statusEl.className = 'status-indicator connected';
                     urlDisplay.classList.add('connected');
+                    connectBtn.innerHTML = '<i class="fas fa-plug"></i> Re-test Connection';
+                    connectBtn.disabled = false;
                     
-                    showNotification(`✅ Successfully connected! Found sheet: ${result.sheetName}`, 'success');
+                    showNotification(`✅ Connected to Google Sheets! Sheet: ${result.sheetName}`, 'success');
                     
                     // Load students after successful connection
-                    loadStudents();
+                    setTimeout(loadStudents, 1000);
+                    
                 } else {
                     throw new Error(result.message || 'Connection failed');
                 }
+                
             } catch (error) {
+                // Error
                 isConnected = false;
-                statusEl.innerHTML = '<i class="fas fa-times-circle"></i> Connection Failed';
-                statusEl.className = 'status-badge status-disconnected';
+                statusEl.innerHTML = `<i class="fas fa-times-circle"></i> ${error.message}`;
+                statusEl.className = 'status-indicator disconnected';
                 urlDisplay.classList.remove('connected');
+                connectBtn.innerHTML = '<i class="fas fa-plug"></i> Test Connection';
+                connectBtn.disabled = false;
                 
                 showNotification(`❌ Connection failed: ${error.message}`, 'error');
-                console.error('Connection error:', error);
+                debugLog(`Connection error: ${error.message}`, 'error');
             }
         }
         
-        // Load Students Function
+        // ================================================
+        // Student Data Management
+        // ================================================
         async function loadStudents() {
             if (!isConnected) {
-                showNotification('Please connect first using the Test Connection button', 'error');
+                showNotification('Please connect first by clicking "Test Connection"', 'error');
                 return;
             }
             
@@ -838,86 +810,75 @@
             const tableBody = document.getElementById('studentsTableBody');
             const emptyState = document.getElementById('emptyState');
             
+            // Show loading
             loading.style.display = 'block';
             tableBody.innerHTML = '';
+            emptyState.style.display = 'none';
+            
+            debugLog('Loading students from Google Sheets...');
             
             try {
                 const response = await fetch(`${WEB_APP_URL}?method=get`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP Error: ${response.status}`);
+                }
+                
                 const result = await response.json();
+                debugLog(`Loaded ${result.count} students`);
                 
                 if (result.success) {
-                    displayStudents(result.students);
-                    updateStats(result.students);
+                    allStudents = result.students || [];
+                    displayStudents(allStudents);
+                    updateStats(allStudents);
                     
-                    if (result.count === 0) {
+                    if (allStudents.length === 0) {
                         emptyState.style.display = 'block';
+                        showNotification('No students found. Add your first student!', 'info');
                     } else {
-                        emptyState.style.display = 'none';
+                        showNotification(`✅ Loaded ${allStudents.length} students`, 'success');
                     }
                 } else {
                     throw new Error(result.message || 'Failed to load students');
                 }
+                
             } catch (error) {
-                showNotification(`Error loading students: ${error.message}`, 'error');
-                console.error('Load students error:', error);
+                showNotification(`❌ Error loading students: ${error.message}`, 'error');
+                debugLog(`Load error: ${error.message}`, 'error');
+                emptyState.style.display = 'block';
+                
             } finally {
                 loading.style.display = 'none';
             }
         }
         
-        // Update Statistics
-        function updateStats(students) {
-            const total = students.length;
-            const pending = students.filter(s => s.Status === 'Pending').length;
-            const completed = students.filter(s => s.Status === 'Completed').length;
-            
-            document.getElementById('totalStudents').textContent = total;
-            document.getElementById('pendingCount').textContent = pending;
-            document.getElementById('completedCount').textContent = completed;
-        }
-        
-        // Display Students in Table
         function displayStudents(students) {
             const tableBody = document.getElementById('studentsTableBody');
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const statusFilter = document.getElementById('statusFilter').value;
-            
             tableBody.innerHTML = '';
             
             students.forEach(student => {
-                // Apply filters
-                if (searchTerm && !Object.values(student).some(value => 
-                    value && value.toString().toLowerCase().includes(searchTerm))) {
-                    return;
-                }
-                
-                if (statusFilter && student.Status !== statusFilter) {
-                    return;
-                }
-                
                 const row = document.createElement('tr');
-                const statusClass = student.Status ? 
-                    student.Status.toLowerCase().replace(' ', '') : 'pending';
+                
+                // Get status class
+                const status = student.status || student.Status || 'Pending';
+                const statusClass = status.toLowerCase().replace(' ', '');
                 
                 row.innerHTML = `
-                    <td>${student.id || 'N/A'}</td>
-                    <td>${student.name || ''}</td>
-                    <td>${student.phone || ''}</td>
-                    <td>${student.Email || ''}</td>
-                    <td>${student.Course || ''}</td>
-                    <td>
-                        <span class="status-badge-small status-${statusClass}">
-                            ${student.Status || 'Pending'}
-                        </span>
-                    </td>
-                    <td>${student.Date || ''}</td>
-                    <td>${student.Timestamp || ''}</td>
+                    <td>${student.id || student.ID || ''}</td>
+                    <td><strong>${student.name || student.Name || ''}</strong></td>
+                    <td>${student.phone || student.Phone || ''}</td>
+                    <td><a href="mailto:${student.email || student.Email || ''}" style="color: #4facfe;">${student.email || student.Email || ''}</a></td>
+                    <td>${student.course || student.Course || ''}</td>
+                    <td style="max-width: 200px; word-wrap: break-word;">${student.query || student.Query || ''}</td>
+                    <td><span class="status-badge status-${statusClass}">${status}</span></td>
+                    <td>${student.date || student.Date || ''}</td>
+                    <td>${student.timestamp || student.Timestamp || ''}</td>
                     <td>
                         <div class="actions">
-                            <button class="btn btn-primary btn-sm" onclick="openEditModal(${student.id})">
+                            <button class="btn btn-primary btn-sm" onclick="editStudent(${student.id || student.ID})">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button class="btn btn-danger btn-sm" onclick="deleteStudent(${student.id})">
+                            <button class="btn btn-danger btn-sm" onclick="deleteStudentPrompt(${student.id || student.ID})">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
@@ -928,184 +889,271 @@
             });
         }
         
-        // Form Submission Handler
+        function filterStudents() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+            
+            const filtered = allStudents.filter(student => {
+                // Search filter
+                const searchMatch = !searchTerm || 
+                    (student.name && student.name.toLowerCase().includes(searchTerm)) ||
+                    (student.email && student.email.toLowerCase().includes(searchTerm)) ||
+                    (student.phone && student.phone.toString().includes(searchTerm)) ||
+                    (student.course && student.course.toLowerCase().includes(searchTerm));
+                
+                // Status filter
+                const statusMatch = !statusFilter || 
+                    (student.status && student.status === statusFilter) ||
+                    (student.Status && student.Status === statusFilter);
+                
+                return searchMatch && statusMatch;
+            });
+            
+            displayStudents(filtered);
+            updateStats(filtered);
+            
+            // Show/hide empty state
+            const emptyState = document.getElementById('emptyState');
+            if (filtered.length === 0 && allStudents.length > 0) {
+                emptyState.style.display = 'block';
+                emptyState.innerHTML = `
+                    <div style="font-size: 3em; color: #dee2e6; margin-bottom: 15px;">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3 style="color: #6c757d;">No matching students found</h3>
+                    <p>Try changing your search criteria</p>
+                `;
+            } else if (filtered.length === 0) {
+                emptyState.style.display = 'block';
+            } else {
+                emptyState.style.display = 'none';
+            }
+        }
+        
+        function updateStats(students) {
+            const total = students.length;
+            const pending = students.filter(s => 
+                (s.status === 'Pending' || s.Status === 'Pending')).length;
+            const completed = students.filter(s => 
+                (s.status === 'Completed' || s.Status === 'Completed')).length;
+            
+            document.getElementById('totalStudents').textContent = total;
+            document.getElementById('pendingCount').textContent = pending;
+            document.getElementById('completedCount').textContent = completed;
+        }
+        
+        // ================================================
+        // Form Handling
+        // ================================================
         document.getElementById('studentForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             if (!isConnected) {
-                showNotification('Please connect first using the Test Connection button', 'error');
+                showNotification('Please connect first by clicking "Test Connection"', 'error');
                 return;
             }
             
+            // Get form data
             const formData = {
-                method: 'add',
-                name: document.getElementById('name').value,
-                phone: document.getElementById('phone').value,
-                email: document.getElementById('email').value,
+                method: editMode ? 'update' : 'add',
+                name: document.getElementById('name').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                email: document.getElementById('email').value.trim(),
                 course: document.getElementById('course').value,
-                query: document.getElementById('query').value,
+                query: document.getElementById('query').value.trim(),
                 status: document.getElementById('status').value
             };
             
+            // Add ID if in edit mode
+            const studentId = document.getElementById('studentId').value;
+            if (editMode && studentId) {
+                formData.id = studentId;
+            }
+            
+            // Validate
+            if (!formData.name || !formData.phone || !formData.email || !formData.course) {
+                showNotification('Please fill all required fields (Name, Phone, Email, Course)', 'error');
+                return;
+            }
+            
+            debugLog(`${editMode ? 'Updating' : 'Adding'} student: ${JSON.stringify(formData)}`);
+            showNotification(`${editMode ? 'Updating' : 'Adding'} student...`, 'info');
+            
             try {
+                // Send to Google Sheets
                 const response = await fetch(WEB_APP_URL, {
                     method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
                     body: new URLSearchParams(formData)
                 });
                 
+                if (!response.ok) {
+                    throw new Error(`HTTP Error: ${response.status}`);
+                }
+                
                 const result = await response.json();
+                debugLog(`Response: ${JSON.stringify(result)}`);
                 
                 if (result.success) {
-                    showNotification(`✅ Student added successfully! ID: ${result.id}`, 'success');
+                    // Success
+                    const message = editMode ? 
+                        `✅ Student updated successfully!` : 
+                        `✅ Student added successfully! ID: ${result.id}`;
+                    
+                    showNotification(message, 'success');
+                    
+                    // Reset form and reload data
                     resetForm();
-                    loadStudents();
+                    setTimeout(loadStudents, 500);
+                    
                 } else {
-                    throw new Error(result.message || 'Failed to add student');
+                    throw new Error(result.message || 'Failed to save student');
                 }
+                
             } catch (error) {
                 showNotification(`❌ Error: ${error.message}`, 'error');
+                debugLog(`Save error: ${error.message}`, 'error');
             }
         });
         
-        // Reset Form
         function resetForm() {
             document.getElementById('studentForm').reset();
             document.getElementById('studentId').value = '';
-            showNotification('Form cleared', 'info');
+            document.getElementById('status').value = 'Pending';
+            editMode = false;
+            
+            // Update submit button
+            const submitBtn = document.querySelector('#studentForm button[type="submit"]');
+            submitBtn.innerHTML = '<i class="fas fa-save"></i> Save to Google Sheets';
         }
         
-        // Open Edit Modal
-        async function openEditModal(id) {
+        function scrollToForm() {
+            document.querySelector('.form-section').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+        
+        // ================================================
+        // Edit Student
+        // ================================================
+        async function editStudent(id) {
             if (!isConnected) {
                 showNotification('Please connect first', 'error');
                 return;
             }
             
-            try {
-                const response = await fetch(`${WEB_APP_URL}?method=get`);
-                const result = await response.json();
+            debugLog(`Editing student ID: ${id}`);
+            
+            // Find student in current data
+            const student = allStudents.find(s => 
+                (s.id == id) || (s.ID == id)
+            );
+            
+            if (student) {
+                // Populate form
+                document.getElementById('studentId').value = student.id || student.ID;
+                document.getElementById('name').value = student.name || student.Name || '';
+                document.getElementById('phone').value = student.phone || student.Phone || '';
+                document.getElementById('email').value = student.email || student.Email || '';
+                document.getElementById('course').value = student.course || student.Course || '';
+                document.getElementById('query').value = student.query || student.Query || '';
+                document.getElementById('status').value = student.status || student.Status || 'Pending';
                 
-                if (result.success) {
-                    const student = result.students.find(s => s.id == id);
-                    if (student) {
-                        document.getElementById('editId').value = student.id;
-                        document.getElementById('editName').value = student.name || '';
-                        document.getElementById('editPhone').value = student.phone || '';
-                        document.getElementById('editEmail').value = student.Email || '';
-                        document.getElementById('editCourse').value = student.Course || '';
-                        document.getElementById('editQuery').value = student.Query || '';
-                        document.getElementById('editStatus').value = student.Status || 'Pending';
-                        
-                        document.getElementById('studentModal').classList.add('show');
-                    }
-                }
-            } catch (error) {
-                showNotification(`Error loading student: ${error.message}`, 'error');
+                // Update UI for edit mode
+                editMode = true;
+                const submitBtn = document.querySelector('#studentForm button[type="submit"]');
+                submitBtn.innerHTML = '<i class="fas fa-save"></i> Update Student';
+                
+                // Scroll to form
+                scrollToForm();
+                showNotification(`Editing student: ${student.name || student.Name}`, 'info');
+                
+            } else {
+                showNotification('Student not found in current data', 'error');
             }
         }
         
-        // Close Modal
-        function closeModal() {
-            document.getElementById('studentModal').classList.remove('show');
-        }
-        
-        // Edit Form Submission
-        document.getElementById('editForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const formData = {
-                method: 'update',
-                id: document.getElementById('editId').value,
-                name: document.getElementById('editName').value,
-                phone: document.getElementById('editPhone').value,
-                email: document.getElementById('editEmail').value,
-                course: document.getElementById('editCourse').value,
-                query: document.getElementById('editQuery').value,
-                status: document.getElementById('editStatus').value
-            };
-            
-            try {
-                const response = await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    body: new URLSearchParams(formData)
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    showNotification('✅ Student updated successfully!', 'success');
-                    closeModal();
-                    loadStudents();
-                } else {
-                    throw new Error(result.message || 'Failed to update student');
-                }
-            } catch (error) {
-                showNotification(`❌ Error: ${error.message}`, 'error');
-            }
-        });
-        
+        // ================================================
         // Delete Student
-        async function deleteStudent(id) {
-            if (!confirm('Are you sure you want to delete this student?')) {
+        // ================================================
+        function deleteStudentPrompt(id) {
+            if (!isConnected) {
+                showNotification('Please connect first', 'error');
                 return;
             }
             
+            const student = allStudents.find(s => 
+                (s.id == id) || (s.ID == id)
+            );
+            
+            const studentName = student ? (student.name || student.Name) : 'this student';
+            
+            if (confirm(`Are you sure you want to delete ${studentName}? This action cannot be undone.`)) {
+                deleteStudent(id);
+            }
+        }
+        
+        async function deleteStudent(id) {
+            debugLog(`Deleting student ID: ${id}`);
+            showNotification('Deleting student...', 'info');
+            
             try {
                 const response = await fetch(WEB_APP_URL, {
                     method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
                     body: new URLSearchParams({
                         method: 'delete',
                         id: id
                     })
                 });
                 
+                if (!response.ok) {
+                    throw new Error(`HTTP Error: ${response.status}`);
+                }
+                
                 const result = await response.json();
+                debugLog(`Response: ${JSON.stringify(result)}`);
                 
                 if (result.success) {
                     showNotification('✅ Student deleted successfully!', 'success');
-                    loadStudents();
+                    setTimeout(loadStudents, 500);
                 } else {
                     throw new Error(result.message || 'Failed to delete student');
                 }
+                
             } catch (error) {
-                showNotification(`❌ Error: ${error.message}`, 'error');
+                showNotification(`❌ Error deleting student: ${error.message}`, 'error');
+                debugLog(`Delete error: ${error.message}`, 'error');
             }
         }
         
-        // Event Listeners for Search and Filter
-        document.getElementById('searchInput').addEventListener('input', () => {
-            // Re-filter existing data
-            const students = Array.from(document.querySelectorAll('#studentsTableBody tr'))
-                .map(row => {
-                    const cells = row.querySelectorAll('td');
-                    return {
-                        id: cells[0].textContent,
-                        name: cells[1].textContent,
-                        phone: cells[2].textContent,
-                        Email: cells[3].textContent,
-                        Course: cells[4].textContent,
-                        Status: cells[5].querySelector('span').textContent,
-                        Date: cells[6].textContent,
-                        Timestamp: cells[7].textContent
-                    };
-                });
+        // ================================================
+        // Initialize
+        // ================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            debugLog('Student Management System initialized');
+            debugLog(`Web App URL: ${WEB_APP_URL}`);
             
-            displayStudents(students);
-        });
-        
-        document.getElementById('statusFilter').addEventListener('change', loadStudents);
-        
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', () => {
             // Auto-test connection after 1 second
             setTimeout(testConnection, 1000);
-        });
-        
-        // Close modal when clicking outside
-        document.getElementById('studentModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeModal();
-            }
+            
+            // Add keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                // Ctrl + R to refresh
+                if (e.ctrlKey && e.key === 'r') {
+                    e.preventDefault();
+                    loadStudents();
+                }
+                
+                // Escape to reset form
+                if (e.key === 'Escape') {
+                    resetForm();
+                }
+            });
         });
     </script>
 </body>
