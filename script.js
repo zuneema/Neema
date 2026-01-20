@@ -96,6 +96,26 @@ if (document.getElementById('studentTable')) {
     const editForm = document.getElementById('editForm');
     const closeModalBtns = document.querySelectorAll('.close-modal');
     
+    // Function to generate unique ID
+    function generateUniqueId() {
+        // Get max ID from existing data and add 1
+        const maxId = Math.max(...studentData.map(s => parseInt(s.id) || 0));
+        return (maxId + 1).toString();
+    }
+    
+    // Function to get current date in proper format
+    function getCurrentDate() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        
+        // Format: YYYY-MM-DD HH:MM
+        return `${year}-${month}-${day} ${hours}:${minutes}`;
+    }
+    
     // Load data into table
     function loadTableData() {
         const tableBody = document.getElementById('tableBody');
@@ -172,6 +192,7 @@ if (document.getElementById('studentTable')) {
     closeModalBtns.forEach(btn => {
         btn.addEventListener('click', function() {
             editModal.style.display = 'none';
+            editForm.reset();
         });
     });
     
@@ -179,6 +200,7 @@ if (document.getElementById('studentTable')) {
     window.addEventListener('click', function(e) {
         if (e.target === editModal) {
             editModal.style.display = 'none';
+            editForm.reset();
         }
     });
     
@@ -188,25 +210,43 @@ if (document.getElementById('studentTable')) {
         
         const index = document.getElementById('editId').value;
         
-        // Update the data
-        studentData[index] = {
-            ...studentData[index],
-            name: document.getElementById('editName').value,
-            phone: document.getElementById('editPhone').value,
-            email: document.getElementById('editEmail').value,
-            course: document.getElementById('editCourse').value,
-            query: document.getElementById('editQuery').value,
-            status: document.getElementById('editStatus').value
-        };
+        // Check if this is a new record (index might be empty or 'new')
+        if (index === '' || index === 'new') {
+            // Create new record
+            const newRecord = {
+                id: generateUniqueId(),
+                name: document.getElementById('editName').value,
+                phone: document.getElementById('editPhone').value,
+                email: document.getElementById('editEmail').value,
+                course: document.getElementById('editCourse').value,
+                query: document.getElementById('editQuery').value,
+                status: document.getElementById('editStatus').value,
+                date: getCurrentDate()
+            };
+            
+            studentData.unshift(newRecord);
+        } else {
+            // Update existing record
+            studentData[index] = {
+                ...studentData[index],
+                name: document.getElementById('editName').value,
+                phone: document.getElementById('editPhone').value,
+                email: document.getElementById('editEmail').value,
+                course: document.getElementById('editCourse').value,
+                query: document.getElementById('editQuery').value,
+                status: document.getElementById('editStatus').value
+            };
+        }
         
         // Reload table
         loadTableData();
         
-        // Close modal
+        // Close modal and reset form
         editModal.style.display = 'none';
+        editForm.reset();
         
         // Show success message
-        alert('Record updated successfully!');
+        alert('Record saved successfully!');
     });
     
     // Delete record
@@ -220,25 +260,24 @@ if (document.getElementById('studentTable')) {
     
     // Add new record
     document.getElementById('addNewBtn').addEventListener('click', function() {
-        // Create a new empty record
-        const newRecord = {
-            id: Date.now().toString(),
-            name: 'New Student',
-            phone: '0000000000',
-            email: 'new@example.com',
-            course: 'Computer Science',
-            query: 'New query',
-            status: 'PENDING',
-            date: new Date().toISOString().split('T')[0]
-        };
+        // Clear the form first
+        editForm.reset();
         
-        studentData.unshift(newRecord);
-        loadTableData();
+        // Set default values for new record
+        document.getElementById('editId').value = 'new';
+        document.getElementById('editName').value = 'New Student';
+        document.getElementById('editPhone').value = '000-000-0000';
+        document.getElementById('editEmail').value = 'new@example.com';
+        document.getElementById('editCourse').value = 'Computer Science';
+        document.getElementById('editQuery').value = 'Enter query here...';
+        document.getElementById('editStatus').value = 'PENDING';
         
-        // Open edit modal for the new record
-        setTimeout(() => {
-            openEditModal(0);
-        }, 100);
+        // Open modal
+        editModal.style.display = 'flex';
+        
+        // Focus on first field
+        document.getElementById('editName').focus();
+        document.getElementById('editName').select();
     });
     
     // Refresh button
@@ -250,8 +289,35 @@ if (document.getElementById('studentTable')) {
         }, 1500);
     });
     
+    // Add keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+        // Ctrl + N for new record
+        if (e.ctrlKey && e.key === 'n') {
+            e.preventDefault();
+            document.getElementById('addNewBtn').click();
+        }
+        
+        // Escape to close modal
+        if (e.key === 'Escape' && editModal.style.display === 'flex') {
+            editModal.style.display = 'none';
+            editForm.reset();
+        }
+    });
+    
     // Initial load
     loadTableData();
+    
+    // Also save data to localStorage to persist changes
+    window.addEventListener('beforeunload', function() {
+        localStorage.setItem('studentData', JSON.stringify(studentData));
+    });
+    
+    // Load saved data from localStorage if exists
+    const savedData = localStorage.getItem('studentData');
+    if (savedData) {
+        studentData = JSON.parse(savedData);
+        loadTableData();
+    }
 }
 
 // Shake animation for login error
