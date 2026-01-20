@@ -175,5 +175,47 @@
     </div>
     
     <script src="script.js"></script>
+
+    <!-- Config Modal -->
+<div id="configModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Setup Google Sheets Connection</h3>
+      <span class="close-config">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="setup-steps">
+        <h4>📋 Setup Instructions:</h4>
+        <ol>
+          <li>Open your Google Sheet</li>
+          <li>Click <strong>Extensions → Apps Script</strong></li>
+          <li>Paste the provided script code</li>
+          <li>Click <strong>Deploy → New deployment</strong></li>
+          <li>Deploy as <strong>Web App</strong></li>
+          <li>Copy the Web App URL</li>
+          <li>Paste it below:</li>
+        </ol>
+        
+        <div class="form-group">
+          <label for="apiUrl">Google Apps Script URL:</label>
+          <input type="text" id="apiUrl" placeholder="https://script.google.com/macros/s/.../exec">
+        </div>
+        
+        <div class="form-group">
+          <label for="apiPassword">Password (set in Apps Script):</label>
+          <input type="password" id="apiPassword" value="admin123">
+        </div>
+        
+        <div class="modal-actions">
+          <button id="saveConfig" class="btn-primary">Save Configuration</button>
+          <button id="testConnection" class="btn-secondary">Test Connection</button>
+          <button class="btn-secondary close-config">Skip (Use Local)</button>
+        </div>
+        
+        <div id="configStatus" class="status-message"></div>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
