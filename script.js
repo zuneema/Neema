@@ -72,7 +72,7 @@ if (document.getElementById('studentTable')) {
   // Test connection to Google Apps Script
   async function testConnection() {
     if (!API_CONFIG.url) {
-      return { success: false, message: "Please enter the Apps Script URL" };
+      return { success: false, message: "https://script.google.com/macros/s/AKfycbzpVTszA8m2u0UAccCREj5pwMztWJSDaxM9JoCQ0WEcYoepZSfd7lwmMyi5xwPyc7bb/exec" };
     }
     
     try {
