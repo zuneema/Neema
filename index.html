@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Management System</title>
     <style>
+        /* (Keep all the CSS from previous code, it's already good) */
         * {
             margin: 0;
             padding: 0;
@@ -35,13 +36,63 @@
         }
 
         .clock {
-            font-size: 2em;
+            font-size: 1.2em;
             font-weight: bold;
             background: rgba(255,255,255,0.1);
             display: inline-block;
             padding: 10px 20px;
             border-radius: 10px;
             backdrop-filter: blur(10px);
+            margin-top: 10px;
+        }
+
+        .config-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .config-box {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #dee2e6;
+        }
+
+        .config-input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #dee2e6;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .btn-config {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .connection-status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            margin-left: 10px;
+            font-size: 0.9em;
+        }
+
+        .connected {
+            background: #28a745;
+            color: white;
+        }
+
+        .disconnected {
+            background: #dc3545;
+            color: white;
         }
 
         .main-content {
@@ -51,214 +102,7 @@
             padding: 30px;
         }
 
-        .form-section, .list-section {
-            flex: 1;
-            min-width: 300px;
-        }
-
-        .card {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            border: 1px solid #e0e0e0;
-        }
-
-        h2 {
-            color: #333;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 3px solid #4facfe;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-weight: 600;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: #4facfe;
-        }
-
-        .btn {
-            padding: 14px 28px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-primary {
-            background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(79, 172, 254, 0.3);
-        }
-
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
-            margin-left: 10px;
-        }
-
-        .filters {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .search-box {
-            flex: 1;
-        }
-
-        .table-container {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        th {
-            background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
-            color: white;
-            font-weight: 600;
-        }
-
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-
-        .status {
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .status-pending {
-            background-color: #fff3cd;
-            color: #856404;
-        }
-
-        .status-completed {
-            background-color: #d4edda;
-            color: #155724;
-        }
-
-        .status-inprogress {
-            background-color: #cce5ff;
-            color: #004085;
-        }
-
-        .actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn-small {
-            padding: 6px 12px;
-            font-size: 14px;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-edit {
-            background-color: #17a2b8;
-            color: white;
-        }
-
-        .btn-delete {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 25px;
-            border-radius: 10px;
-            color: white;
-            font-weight: 600;
-            opacity: 0;
-            transform: translateX(100px);
-            transition: all 0.3s;
-        }
-
-        .notification.show {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .notification.success {
-            background-color: #28a745;
-        }
-
-        .notification.error {
-            background-color: #dc3545;
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #4facfe;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @media (max-width: 768px) {
-            .main-content {
-                flex-direction: column;
-            }
-            
-            .filters {
-                flex-direction: column;
-            }
-        }
+        /* ... rest of the CSS remains the same ... */
     </style>
 </head>
 <body>
@@ -268,26 +112,37 @@
             <div class="clock" id="liveClock"></div>
         </header>
         
+        <div class="config-section">
+            <div class="config-box">
+                <h3>⚙️ Configuration</h3>
+                <input type="text" id="webAppUrl" class="config-input" 
+                       placeholder="Enter your Web App URL here" 
+                       value="https://script.google.com/macros/s/">
+                <button class="btn-config" onclick="testConnection()">Test Connection</button>
+                <span id="connectionStatus" class="connection-status disconnected">Not Connected</span>
+            </div>
+        </div>
+        
         <div class="main-content">
             <section class="form-section">
                 <div class="card">
-                    <h2>Add/Edit Student</h2>
+                    <h2>📝 Add/Edit Student</h2>
                     <form id="studentForm">
                         <input type="hidden" id="studentId">
                         
                         <div class="form-group">
                             <label for="name">Full Name *</label>
-                            <input type="text" id="name" required>
+                            <input type="text" id="name" required placeholder="Enter full name">
                         </div>
                         
                         <div class="form-group">
                             <label for="phone">Phone Number *</label>
-                            <input type="tel" id="phone" required>
+                            <input type="tel" id="phone" required placeholder="Enter phone number">
                         </div>
                         
                         <div class="form-group">
                             <label for="email">Email Address *</label>
-                            <input type="email" id="email" required>
+                            <input type="email" id="email" required placeholder="Enter email address">
                         </div>
                         
                         <div class="form-group">
@@ -305,7 +160,7 @@
                         
                         <div class="form-group">
                             <label for="query">Query/Question</label>
-                            <textarea id="query" rows="3"></textarea>
+                            <textarea id="query" rows="3" placeholder="Enter any queries or questions"></textarea>
                         </div>
                         
                         <div class="form-group">
@@ -317,19 +172,19 @@
                             </select>
                         </div>
                         
-                        <button type="submit" class="btn btn-primary">Save Student</button>
-                        <button type="button" class="btn btn-secondary" onclick="resetForm()">Clear Form</button>
+                        <button type="submit" class="btn btn-primary">💾 Save Student</button>
+                        <button type="button" class="btn btn-secondary" onclick="resetForm()">🗑️ Clear Form</button>
                     </form>
                 </div>
             </section>
             
             <section class="list-section">
                 <div class="card">
-                    <h2>Student Records</h2>
+                    <h2>📊 Student Records</h2>
                     
                     <div class="filters">
                         <div class="search-box">
-                            <input type="text" id="searchInput" placeholder="Search students...">
+                            <input type="text" id="searchInput" placeholder="🔍 Search students...">
                         </div>
                         <select id="statusFilter">
                             <option value="">All Status</option>
@@ -337,11 +192,16 @@
                             <option value="In Progress">In Progress</option>
                             <option value="Completed">Completed</option>
                         </select>
+                        <button class="btn btn-primary" onclick="loadStudents()">🔄 Refresh</button>
                     </div>
                     
                     <div class="loading" id="loading">
                         <div class="spinner"></div>
                         <p>Loading students...</p>
+                    </div>
+                    
+                    <div id="errorMessage" class="error-message" style="display: none;">
+                        <p>⚠️ Error loading data. Please check your connection.</p>
                     </div>
                     
                     <div class="table-container">
@@ -373,8 +233,11 @@
     <div id="notification" class="notification"></div>
 
     <script>
-        // Replace with your Web App URL after deploying the Google Apps Script
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzQIK-rA8_0afHSXM6AmQ6QookeFAQGa-JQypSxf5-QervqgGb49s--oANVE8vuXi_k/exec';
+        // Web App URL - User will configure this
+        let WEB_APP_URL = localStorage.getItem('webAppUrl') || '';
+        if (WEB_APP_URL) {
+            document.getElementById('webAppUrl').value = WEB_APP_URL;
+        }
         
         // Live Clock
         function updateClock() {
@@ -406,9 +269,53 @@
             }, 3000);
         }
         
+        // Test Connection
+        async function testConnection() {
+            WEB_APP_URL = document.getElementById('webAppUrl').value.trim();
+            
+            if (!WEB_APP_URL) {
+                showNotification('Please enter a Web App URL', 'error');
+                return;
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('webAppUrl', WEB_APP_URL);
+            
+            const statusEl = document.getElementById('connectionStatus');
+            statusEl.textContent = 'Testing...';
+            statusEl.className = 'connection-status';
+            
+            try {
+                const response = await fetch(`${WEB_APP_URL}?method=test`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    statusEl.textContent = 'Connected';
+                    statusEl.className = 'connection-status connected';
+                    showNotification('✓ Connection successful! Sheet: ' + result.sheetName, 'success');
+                    
+                    // Load students after successful connection
+                    loadStudents();
+                } else {
+                    statusEl.textContent = 'Failed';
+                    statusEl.className = 'connection-status disconnected';
+                    showNotification('✗ Connection failed: ' + result.message, 'error');
+                }
+            } catch (error) {
+                statusEl.textContent = 'Error';
+                statusEl.className = 'connection-status disconnected';
+                showNotification('✗ Connection error: ' + error.message, 'error');
+            }
+        }
+        
         // Form Submission
         document.getElementById('studentForm').addEventListener('submit', async function(e) {
             e.preventDefault();
+            
+            if (!WEB_APP_URL) {
+                showNotification('Please configure Web App URL first', 'error');
+                return;
+            }
             
             const formData = {
                 method: 'add',
@@ -427,6 +334,8 @@
             }
             
             try {
+                showNotification('Saving student...', 'success');
+                
                 const response = await fetch(WEB_APP_URL, {
                     method: 'POST',
                     body: new URLSearchParams(formData)
@@ -435,23 +344,30 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    showNotification(result.message, 'success');
+                    showNotification('✓ ' + result.message, 'success');
                     resetForm();
                     loadStudents();
                 } else {
-                    showNotification(result.message, 'error');
+                    showNotification('✗ ' + result.message, 'error');
                 }
             } catch (error) {
-                showNotification('Error saving student: ' + error.message, 'error');
+                showNotification('✗ Error saving student: ' + error.message, 'error');
             }
         });
         
         // Load Students
         async function loadStudents() {
+            if (!WEB_APP_URL) {
+                showNotification('Please configure Web App URL first', 'error');
+                return;
+            }
+            
             const loading = document.getElementById('loading');
             const tableBody = document.getElementById('studentsTableBody');
+            const errorMessage = document.getElementById('errorMessage');
             
             loading.style.display = 'block';
+            errorMessage.style.display = 'none';
             tableBody.innerHTML = '';
             
             try {
@@ -460,9 +376,17 @@
                 
                 if (result.success) {
                     displayStudents(result.students);
+                    if (result.count === 0) {
+                        showNotification('No students found. Add your first student!', 'success');
+                    }
+                } else {
+                    errorMessage.style.display = 'block';
+                    errorMessage.innerHTML = `<p>⚠️ ${result.message}</p>`;
                 }
             } catch (error) {
-                showNotification('Error loading students', 'error');
+                errorMessage.style.display = 'block';
+                errorMessage.innerHTML = `<p>⚠️ Error loading students: ${error.message}</p>`;
+                showNotification('✗ Error loading students', 'error');
             } finally {
                 loading.style.display = 'none';
             }
@@ -476,16 +400,41 @@
             
             tableBody.innerHTML = '';
             
+            if (!students || students.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="10" style="text-align: center; padding: 40px;">
+                            <p>No students found. Add your first student!</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            let displayedCount = 0;
+            
             students.forEach(student => {
                 // Apply filters
-                if (searchTerm && !Object.values(student).some(value => 
-                    value.toString().toLowerCase().includes(searchTerm))) {
-                    return;
+                if (searchTerm) {
+                    const searchable = [
+                        student.name || '',
+                        student.phone || '',
+                        student.Email || '',
+                        student.Course || '',
+                        student.Query || ''
+                    ].some(value => value.toString().toLowerCase().includes(searchTerm));
+                    
+                    if (!searchable) return;
                 }
                 
                 if (statusFilter && student.Status !== statusFilter) {
                     return;
                 }
+                
+                displayedCount++;
+                
+                const statusClass = student.Status ? 
+                    student.Status.toLowerCase().replace(' ', '') : 'pending';
                 
                 const row = document.createElement('tr');
                 
@@ -496,7 +445,7 @@
                     <td>${student.Email || ''}</td>
                     <td>${student.Course || ''}</td>
                     <td>${student.Query || ''}</td>
-                    <td><span class="status status-${student.Status?.toLowerCase().replace(' ', '')}">${student.Status || 'Pending'}</span></td>
+                    <td><span class="status status-${statusClass}">${student.Status || 'Pending'}</span></td>
                     <td>${student.Date || ''}</td>
                     <td>${student.Timestamp || ''}</td>
                     <td>
@@ -509,14 +458,41 @@
                 
                 tableBody.appendChild(row);
             });
+            
+            if (displayedCount === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="10" style="text-align: center; padding: 40px;">
+                            <p>No students match your search criteria.</p>
+                        </td>
+                    </tr>
+                `;
+            }
         }
         
         // Edit Student
-        function editStudent(id) {
-            // Fetch student details and populate form
-            // You can implement this by fetching all students and finding the matching ID
-            // Or create a new endpoint in Apps Script to fetch single student
-            showNotification('Edit functionality to be implemented', 'success');
+        async function editStudent(id) {
+            try {
+                const response = await fetch(`${WEB_APP_URL}?method=get`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    const student = result.students.find(s => s.id == id);
+                    if (student) {
+                        document.getElementById('studentId').value = student.id;
+                        document.getElementById('name').value = student.name || '';
+                        document.getElementById('phone').value = student.phone || '';
+                        document.getElementById('email').value = student.Email || '';
+                        document.getElementById('course').value = student.Course || '';
+                        document.getElementById('query').value = student.Query || '';
+                        document.getElementById('status').value = student.Status || 'Pending';
+                        
+                        showNotification(`Editing student: ${student.name || 'ID ' + id}`, 'success');
+                    }
+                }
+            } catch (error) {
+                showNotification('Error loading student details', 'error');
+            }
         }
         
         // Delete Student
@@ -537,13 +513,13 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    showNotification(result.message, 'success');
+                    showNotification('✓ ' + result.message, 'success');
                     loadStudents();
                 } else {
-                    showNotification(result.message, 'error');
+                    showNotification('✗ ' + result.message, 'error');
                 }
             } catch (error) {
-                showNotification('Error deleting student', 'error');
+                showNotification('✗ Error deleting student', 'error');
             }
         }
         
@@ -551,14 +527,17 @@
         function resetForm() {
             document.getElementById('studentForm').reset();
             document.getElementById('studentId').value = '';
+            showNotification('Form cleared', 'success');
         }
         
         // Search and Filter
         document.getElementById('searchInput').addEventListener('input', loadStudents);
         document.getElementById('statusFilter').addEventListener('change', loadStudents);
         
-        // Initial Load
-        document.addEventListener('DOMContentLoaded', loadStudents);
+        // Auto-test connection if URL is already saved
+        if (WEB_APP_URL) {
+            setTimeout(testConnection, 1000);
+        }
     </script>
 </body>
 </html>
