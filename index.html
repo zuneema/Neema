@@ -5,7 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Management System</title>
     <style>
-        /* (Keep all the CSS from previous code, it's already good) */
+        :root {
+            --primary: #4facfe;
+            --secondary: #00f2fe;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --dark: #343a40;
+            --light: #f8f9fa;
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -14,9 +23,10 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
+            color: var(--dark);
         }
 
         .container {
@@ -26,186 +36,604 @@
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         header {
-            background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+            background: linear-gradient(to right, var(--primary) 0%, var(--secondary) 100%);
             color: white;
             padding: 30px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-50px) rotate(360deg); }
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .clock-container {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 15px 25px;
+            display: inline-block;
+            border: 1px solid rgba(255,255,255,0.2);
+            position: relative;
+            z-index: 1;
         }
 
         .clock {
             font-size: 1.2em;
             font-weight: bold;
-            background: rgba(255,255,255,0.1);
-            display: inline-block;
-            padding: 10px 20px;
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
-            margin-top: 10px;
+            font-family: 'Courier New', monospace;
         }
 
         .config-section {
-            background: #f8f9fa;
+            background: var(--light);
             padding: 20px;
-            border-bottom: 1px solid #dee2e6;
+            border-bottom: 2px solid #dee2e6;
         }
 
-        .config-box {
+        .config-card {
             background: white;
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid #dee2e6;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border: 1px solid #e9ecef;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        .config-input {
-            width: 100%;
-            padding: 10px;
+        .url-display {
+            background: #f8f9fa;
             border: 2px solid #dee2e6;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-
-        .btn-config {
-            background: #28a745;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .connection-status {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 20px;
-            margin-left: 10px;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
             font-size: 0.9em;
+            color: var(--dark);
         }
 
-        .connected {
-            background: #28a745;
+        .url-display.connected {
+            border-color: var(--success);
+            background: #d4edda;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .status-connected {
+            background: var(--success);
             color: white;
         }
 
-        .disconnected {
-            background: #dc3545;
+        .status-disconnected {
+            background: var(--danger);
             color: white;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 14px;
         }
 
         .main-content {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 30px;
             padding: 30px;
         }
 
-        /* ... rest of the CSS remains the same ... */
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border: 1px solid #e9ecef;
+            height: 100%;
+        }
+
+        .card h2 {
+            color: var(--dark);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #495057;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .required::after {
+            content: '*';
+            color: var(--danger);
+            margin-left: 4px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .filters {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        thead {
+            background: linear-gradient(to right, var(--primary) 0%, var(--secondary) 100%);
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #e9ecef;
+            transition: background-color 0.2s;
+        }
+
+        tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        td {
+            padding: 12px 15px;
+        }
+
+        .status-badge-small {
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-inprogress {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: nowrap;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        .empty-state i {
+            font-size: 3em;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateX(100px);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            max-width: 400px;
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: var(--success);
+        }
+
+        .notification.error {
+            background: var(--danger);
+        }
+
+        .notification.info {
+            background: var(--primary);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1001;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #6c757d;
+            font-size: 0.9em;
+            border-top: 1px solid #e9ecef;
+        }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🎓 Student Management System</h1>
-            <div class="clock" id="liveClock"></div>
+            <h1><i class="fas fa-graduation-cap"></i> Student Management System</h1>
+            <p class="subtitle">Manage student data efficiently with Google Sheets backend</p>
+            <div class="clock-container">
+                <div class="clock" id="liveClock"></div>
+            </div>
         </header>
         
         <div class="config-section">
-            <div class="config-box">
-                <h3>⚙️ Configuration</h3>
-                <input type="text" id="webAppUrl" class="config-input" 
-                       placeholder="Enter your Web App URL here" 
-                       value="https://script.google.com/macros/s/">
-                <button class="btn-config" onclick="testConnection()">Test Connection</button>
-                <span id="connectionStatus" class="connection-status disconnected">Not Connected</span>
+            <div class="config-card">
+                <h3><i class="fas fa-cog"></i> Configuration</h3>
+                <p>Your Web App URL is configured and ready to use:</p>
+                <div class="url-display" id="urlDisplay">
+                    https://script.google.com/macros/s/AKfycbwJcjPMZ6PWew63rdWnP_hI9WgxFB2lXL31ALQJnNNzoVNeSSNTxAm4XMxwR1R2cw0B/exec
+                </div>
+                <div>
+                    <button class="btn btn-success" onclick="testConnection()">
+                        <i class="fas fa-plug"></i> Test Connection
+                    </button>
+                    <span id="connectionStatus" class="status-badge status-disconnected">
+                        <i class="fas fa-times-circle"></i> Not Connected
+                    </span>
+                </div>
             </div>
         </div>
         
         <div class="main-content">
-            <section class="form-section">
+            <div class="form-section">
                 <div class="card">
-                    <h2>📝 Add/Edit Student</h2>
+                    <h2><i class="fas fa-user-plus"></i> Student Form</h2>
                     <form id="studentForm">
                         <input type="hidden" id="studentId">
                         
                         <div class="form-group">
-                            <label for="name">Full Name *</label>
-                            <input type="text" id="name" required placeholder="Enter full name">
+                            <label for="name" class="required">
+                                <i class="fas fa-user"></i> Full Name
+                            </label>
+                            <input type="text" id="name" class="form-control" required 
+                                   placeholder="Enter student's full name">
                         </div>
                         
                         <div class="form-group">
-                            <label for="phone">Phone Number *</label>
-                            <input type="tel" id="phone" required placeholder="Enter phone number">
+                            <label for="phone" class="required">
+                                <i class="fas fa-phone"></i> Phone Number
+                            </label>
+                            <input type="tel" id="phone" class="form-control" required 
+                                   placeholder="Enter phone number">
                         </div>
                         
                         <div class="form-group">
-                            <label for="email">Email Address *</label>
-                            <input type="email" id="email" required placeholder="Enter email address">
+                            <label for="email" class="required">
+                                <i class="fas fa-envelope"></i> Email Address
+                            </label>
+                            <input type="email" id="email" class="form-control" required 
+                                   placeholder="Enter email address">
                         </div>
                         
                         <div class="form-group">
-                            <label for="course">Course *</label>
-                            <select id="course" required>
-                                <option value="">Select Course</option>
+                            <label for="course" class="required">
+                                <i class="fas fa-book"></i> Course
+                            </label>
+                            <select id="course" class="form-control" required>
+                                <option value="">Select a course</option>
                                 <option value="Computer Science">Computer Science</option>
+                                <option value="Information Technology">Information Technology</option>
                                 <option value="Engineering">Engineering</option>
-                                <option value="Business">Business</option>
-                                <option value="Arts">Arts</option>
+                                <option value="Business Administration">Business Administration</option>
                                 <option value="Medicine">Medicine</option>
+                                <option value="Arts">Arts</option>
+                                <option value="Science">Science</option>
                                 <option value="Other">Other</option>
                             </select>
                         </div>
                         
                         <div class="form-group">
-                            <label for="query">Query/Question</label>
-                            <textarea id="query" rows="3" placeholder="Enter any queries or questions"></textarea>
+                            <label for="query">
+                                <i class="fas fa-question-circle"></i> Query/Question
+                            </label>
+                            <textarea id="query" class="form-control" 
+                                      placeholder="Enter any queries or questions"></textarea>
                         </div>
                         
                         <div class="form-group">
-                            <label for="status">Status</label>
-                            <select id="status">
+                            <label for="status">
+                                <i class="fas fa-tasks"></i> Status
+                            </label>
+                            <select id="status" class="form-control">
                                 <option value="Pending">Pending</option>
                                 <option value="In Progress">In Progress</option>
                                 <option value="Completed">Completed</option>
                             </select>
                         </div>
                         
-                        <button type="submit" class="btn btn-primary">💾 Save Student</button>
-                        <button type="button" class="btn btn-secondary" onclick="resetForm()">🗑️ Clear Form</button>
+                        <div style="display: flex; gap: 10px; margin-top: 30px;">
+                            <button type="submit" class="btn btn-primary" style="flex: 1;">
+                                <i class="fas fa-save"></i> Save Student
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                                <i class="fas fa-undo"></i> Clear
+                            </button>
+                        </div>
                     </form>
                 </div>
-            </section>
+            </div>
             
-            <section class="list-section">
+            <div class="list-section">
                 <div class="card">
-                    <h2>📊 Student Records</h2>
+                    <h2><i class="fas fa-list"></i> Student Records</h2>
+                    
+                    <div class="stats" id="stats">
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalStudents">0</div>
+                            <div class="stat-label">Total Students</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="pendingCount">0</div>
+                            <div class="stat-label">Pending</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="completedCount">0</div>
+                            <div class="stat-label">Completed</div>
+                        </div>
+                    </div>
                     
                     <div class="filters">
-                        <div class="search-box">
-                            <input type="text" id="searchInput" placeholder="🔍 Search students...">
-                        </div>
-                        <select id="statusFilter">
+                        <input type="text" id="searchInput" class="form-control" 
+                               placeholder="Search by name, email, or course...">
+                        <select id="statusFilter" class="form-control">
                             <option value="">All Status</option>
                             <option value="Pending">Pending</option>
                             <option value="In Progress">In Progress</option>
                             <option value="Completed">Completed</option>
                         </select>
-                        <button class="btn btn-primary" onclick="loadStudents()">🔄 Refresh</button>
+                        <button class="btn btn-primary" onclick="loadStudents()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
                     </div>
                     
                     <div class="loading" id="loading">
                         <div class="spinner"></div>
-                        <p>Loading students...</p>
-                    </div>
-                    
-                    <div id="errorMessage" class="error-message" style="display: none;">
-                        <p>⚠️ Error loading data. Please check your connection.</p>
+                        <p>Loading student data...</p>
                     </div>
                     
                     <div class="table-container">
-                        <table id="studentsTable">
+                        <table>
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -213,7 +641,6 @@
                                     <th>Phone</th>
                                     <th>Email</th>
                                     <th>Course</th>
-                                    <th>Query</th>
                                     <th>Status</th>
                                     <th>Date</th>
                                     <th>Time</th>
@@ -221,29 +648,108 @@
                                 </tr>
                             </thead>
                             <tbody id="studentsTableBody">
-                                <!-- Data will be populated here -->
+                                <!-- Data will be loaded here -->
                             </tbody>
                         </table>
                     </div>
+                    
+                    <div class="empty-state" id="emptyState" style="display: none;">
+                        <i class="fas fa-users-slash"></i>
+                        <h3>No Students Found</h3>
+                        <p>Add your first student using the form on the left!</p>
+                    </div>
                 </div>
-            </section>
+            </div>
         </div>
+        
+        <footer>
+            <p>Student Management System v1.0 | Connected to Google Sheets</p>
+            <p style="font-size: 0.8em; margin-top: 5px;">
+                <i class="fas fa-clock"></i> Live Timestamp | 
+                <i class="fas fa-database"></i> Google Sheets Backend
+            </p>
+        </footer>
     </div>
     
-    <div id="notification" class="notification"></div>
+    <div id="notification" class="notification">
+        <i class="fas fa-info-circle"></i>
+        <span id="notificationText"></span>
+    </div>
+    
+    <div class="modal" id="studentModal">
+        <div class="modal-content">
+            <h2><i class="fas fa-edit"></i> Edit Student</h2>
+            <form id="editForm">
+                <input type="hidden" id="editId">
+                
+                <div class="form-group">
+                    <label for="editName">Full Name</label>
+                    <input type="text" id="editName" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editPhone">Phone Number</label>
+                    <input type="tel" id="editPhone" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editEmail">Email Address</label>
+                    <input type="email" id="editEmail" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editCourse">Course</label>
+                    <select id="editCourse" class="form-control" required>
+                        <option value="">Select a course</option>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Information Technology">Information Technology</option>
+                        <option value="Engineering">Engineering</option>
+                        <option value="Business Administration">Business Administration</option>
+                        <option value="Medicine">Medicine</option>
+                        <option value="Arts">Arts</option>
+                        <option value="Science">Science</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editQuery">Query/Question</label>
+                    <textarea id="editQuery" class="form-control"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editStatus">Status</label>
+                    <select id="editStatus" class="form-control">
+                        <option value="Pending">Pending</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
+                
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">
+                        <i class="fas fa-save"></i> Update
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="closeModal()">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <script>
-        // Web App URL - User will configure this
-        let WEB_APP_URL = localStorage.getItem('webAppUrl') || '';
-        if (WEB_APP_URL) {
-            document.getElementById('webAppUrl').value = WEB_APP_URL;
-        }
+        // Web App URL - Using your provided URL
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwJcjPMZ6PWew63rdWnP_hI9WgxFB2lXL31ALQJnNNzoVNeSSNTxAm4XMxwR1R2cw0B/exec';
         
-        // Live Clock
+        // Initialize connection status
+        let isConnected = false;
+        
+        // Live Clock Function
         function updateClock() {
             const now = new Date();
             const clock = document.getElementById('liveClock');
-            clock.textContent = now.toLocaleString('en-US', {
+            const options = {
                 weekday: 'long',
                 year: 'numeric',
                 month: 'long',
@@ -252,68 +758,182 @@
                 minute: '2-digit',
                 second: '2-digit',
                 hour12: true
-            });
+            };
+            clock.textContent = now.toLocaleString('en-US', options);
         }
         
+        // Update clock every second
         setInterval(updateClock, 1000);
         updateClock();
         
-        // Show Notification
-        function showNotification(message, type = 'success') {
+        // Notification System
+        function showNotification(message, type = 'info') {
             const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.className = `notification ${type} show`;
+            const notificationText = document.getElementById('notificationText');
             
+            notificationText.textContent = message;
+            notification.className = `notification ${type}`;
+            
+            // Add show class with a small delay for animation
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+            
+            // Auto hide after 5 seconds
             setTimeout(() => {
                 notification.classList.remove('show');
-            }, 3000);
+            }, 5000);
         }
         
-        // Test Connection
+        // Test Connection Function
         async function testConnection() {
-            WEB_APP_URL = document.getElementById('webAppUrl').value.trim();
-            
-            if (!WEB_APP_URL) {
-                showNotification('Please enter a Web App URL', 'error');
-                return;
-            }
-            
-            // Save to localStorage
-            localStorage.setItem('webAppUrl', WEB_APP_URL);
-            
             const statusEl = document.getElementById('connectionStatus');
-            statusEl.textContent = 'Testing...';
-            statusEl.className = 'connection-status';
+            const urlDisplay = document.getElementById('urlDisplay');
+            
+            statusEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Testing...';
+            statusEl.className = 'status-badge';
             
             try {
+                // Test the connection
                 const response = await fetch(`${WEB_APP_URL}?method=test`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
                 const result = await response.json();
                 
                 if (result.success) {
-                    statusEl.textContent = 'Connected';
-                    statusEl.className = 'connection-status connected';
-                    showNotification('✓ Connection successful! Sheet: ' + result.sheetName, 'success');
+                    isConnected = true;
+                    statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Connected';
+                    statusEl.className = 'status-badge status-connected';
+                    urlDisplay.classList.add('connected');
+                    
+                    showNotification(`✅ Successfully connected! Found sheet: ${result.sheetName}`, 'success');
                     
                     // Load students after successful connection
                     loadStudents();
                 } else {
-                    statusEl.textContent = 'Failed';
-                    statusEl.className = 'connection-status disconnected';
-                    showNotification('✗ Connection failed: ' + result.message, 'error');
+                    throw new Error(result.message || 'Connection failed');
                 }
             } catch (error) {
-                statusEl.textContent = 'Error';
-                statusEl.className = 'connection-status disconnected';
-                showNotification('✗ Connection error: ' + error.message, 'error');
+                isConnected = false;
+                statusEl.innerHTML = '<i class="fas fa-times-circle"></i> Connection Failed';
+                statusEl.className = 'status-badge status-disconnected';
+                urlDisplay.classList.remove('connected');
+                
+                showNotification(`❌ Connection failed: ${error.message}`, 'error');
+                console.error('Connection error:', error);
             }
         }
         
-        // Form Submission
+        // Load Students Function
+        async function loadStudents() {
+            if (!isConnected) {
+                showNotification('Please connect first using the Test Connection button', 'error');
+                return;
+            }
+            
+            const loading = document.getElementById('loading');
+            const tableBody = document.getElementById('studentsTableBody');
+            const emptyState = document.getElementById('emptyState');
+            
+            loading.style.display = 'block';
+            tableBody.innerHTML = '';
+            
+            try {
+                const response = await fetch(`${WEB_APP_URL}?method=get`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    displayStudents(result.students);
+                    updateStats(result.students);
+                    
+                    if (result.count === 0) {
+                        emptyState.style.display = 'block';
+                    } else {
+                        emptyState.style.display = 'none';
+                    }
+                } else {
+                    throw new Error(result.message || 'Failed to load students');
+                }
+            } catch (error) {
+                showNotification(`Error loading students: ${error.message}`, 'error');
+                console.error('Load students error:', error);
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+        
+        // Update Statistics
+        function updateStats(students) {
+            const total = students.length;
+            const pending = students.filter(s => s.Status === 'Pending').length;
+            const completed = students.filter(s => s.Status === 'Completed').length;
+            
+            document.getElementById('totalStudents').textContent = total;
+            document.getElementById('pendingCount').textContent = pending;
+            document.getElementById('completedCount').textContent = completed;
+        }
+        
+        // Display Students in Table
+        function displayStudents(students) {
+            const tableBody = document.getElementById('studentsTableBody');
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+            
+            tableBody.innerHTML = '';
+            
+            students.forEach(student => {
+                // Apply filters
+                if (searchTerm && !Object.values(student).some(value => 
+                    value && value.toString().toLowerCase().includes(searchTerm))) {
+                    return;
+                }
+                
+                if (statusFilter && student.Status !== statusFilter) {
+                    return;
+                }
+                
+                const row = document.createElement('tr');
+                const statusClass = student.Status ? 
+                    student.Status.toLowerCase().replace(' ', '') : 'pending';
+                
+                row.innerHTML = `
+                    <td>${student.id || 'N/A'}</td>
+                    <td>${student.name || ''}</td>
+                    <td>${student.phone || ''}</td>
+                    <td>${student.Email || ''}</td>
+                    <td>${student.Course || ''}</td>
+                    <td>
+                        <span class="status-badge-small status-${statusClass}">
+                            ${student.Status || 'Pending'}
+                        </span>
+                    </td>
+                    <td>${student.Date || ''}</td>
+                    <td>${student.Timestamp || ''}</td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn btn-primary btn-sm" onclick="openEditModal(${student.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteStudent(${student.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // Form Submission Handler
         document.getElementById('studentForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            if (!WEB_APP_URL) {
-                showNotification('Please configure Web App URL first', 'error');
+            if (!isConnected) {
+                showNotification('Please connect first using the Test Connection button', 'error');
                 return;
             }
             
@@ -327,15 +947,7 @@
                 status: document.getElementById('status').value
             };
             
-            const studentId = document.getElementById('studentId').value;
-            if (studentId) {
-                formData.method = 'update';
-                formData.id = studentId;
-            }
-            
             try {
-                showNotification('Saving student...', 'success');
-                
                 const response = await fetch(WEB_APP_URL, {
                     method: 'POST',
                     body: new URLSearchParams(formData)
@@ -344,134 +956,31 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    showNotification('✓ ' + result.message, 'success');
+                    showNotification(`✅ Student added successfully! ID: ${result.id}`, 'success');
                     resetForm();
                     loadStudents();
                 } else {
-                    showNotification('✗ ' + result.message, 'error');
+                    throw new Error(result.message || 'Failed to add student');
                 }
             } catch (error) {
-                showNotification('✗ Error saving student: ' + error.message, 'error');
+                showNotification(`❌ Error: ${error.message}`, 'error');
             }
         });
         
-        // Load Students
-        async function loadStudents() {
-            if (!WEB_APP_URL) {
-                showNotification('Please configure Web App URL first', 'error');
+        // Reset Form
+        function resetForm() {
+            document.getElementById('studentForm').reset();
+            document.getElementById('studentId').value = '';
+            showNotification('Form cleared', 'info');
+        }
+        
+        // Open Edit Modal
+        async function openEditModal(id) {
+            if (!isConnected) {
+                showNotification('Please connect first', 'error');
                 return;
             }
             
-            const loading = document.getElementById('loading');
-            const tableBody = document.getElementById('studentsTableBody');
-            const errorMessage = document.getElementById('errorMessage');
-            
-            loading.style.display = 'block';
-            errorMessage.style.display = 'none';
-            tableBody.innerHTML = '';
-            
-            try {
-                const response = await fetch(`${WEB_APP_URL}?method=get`);
-                const result = await response.json();
-                
-                if (result.success) {
-                    displayStudents(result.students);
-                    if (result.count === 0) {
-                        showNotification('No students found. Add your first student!', 'success');
-                    }
-                } else {
-                    errorMessage.style.display = 'block';
-                    errorMessage.innerHTML = `<p>⚠️ ${result.message}</p>`;
-                }
-            } catch (error) {
-                errorMessage.style.display = 'block';
-                errorMessage.innerHTML = `<p>⚠️ Error loading students: ${error.message}</p>`;
-                showNotification('✗ Error loading students', 'error');
-            } finally {
-                loading.style.display = 'none';
-            }
-        }
-        
-        // Display Students
-        function displayStudents(students) {
-            const tableBody = document.getElementById('studentsTableBody');
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const statusFilter = document.getElementById('statusFilter').value;
-            
-            tableBody.innerHTML = '';
-            
-            if (!students || students.length === 0) {
-                tableBody.innerHTML = `
-                    <tr>
-                        <td colspan="10" style="text-align: center; padding: 40px;">
-                            <p>No students found. Add your first student!</p>
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-            
-            let displayedCount = 0;
-            
-            students.forEach(student => {
-                // Apply filters
-                if (searchTerm) {
-                    const searchable = [
-                        student.name || '',
-                        student.phone || '',
-                        student.Email || '',
-                        student.Course || '',
-                        student.Query || ''
-                    ].some(value => value.toString().toLowerCase().includes(searchTerm));
-                    
-                    if (!searchable) return;
-                }
-                
-                if (statusFilter && student.Status !== statusFilter) {
-                    return;
-                }
-                
-                displayedCount++;
-                
-                const statusClass = student.Status ? 
-                    student.Status.toLowerCase().replace(' ', '') : 'pending';
-                
-                const row = document.createElement('tr');
-                
-                row.innerHTML = `
-                    <td>${student.id || ''}</td>
-                    <td>${student.name || ''}</td>
-                    <td>${student.phone || ''}</td>
-                    <td>${student.Email || ''}</td>
-                    <td>${student.Course || ''}</td>
-                    <td>${student.Query || ''}</td>
-                    <td><span class="status status-${statusClass}">${student.Status || 'Pending'}</span></td>
-                    <td>${student.Date || ''}</td>
-                    <td>${student.Timestamp || ''}</td>
-                    <td>
-                        <div class="actions">
-                            <button class="btn-small btn-edit" onclick="editStudent(${student.id})">Edit</button>
-                            <button class="btn-small btn-delete" onclick="deleteStudent(${student.id})">Delete</button>
-                        </div>
-                    </td>
-                `;
-                
-                tableBody.appendChild(row);
-            });
-            
-            if (displayedCount === 0) {
-                tableBody.innerHTML = `
-                    <tr>
-                        <td colspan="10" style="text-align: center; padding: 40px;">
-                            <p>No students match your search criteria.</p>
-                        </td>
-                    </tr>
-                `;
-            }
-        }
-        
-        // Edit Student
-        async function editStudent(id) {
             try {
                 const response = await fetch(`${WEB_APP_URL}?method=get`);
                 const result = await response.json();
@@ -479,21 +988,61 @@
                 if (result.success) {
                     const student = result.students.find(s => s.id == id);
                     if (student) {
-                        document.getElementById('studentId').value = student.id;
-                        document.getElementById('name').value = student.name || '';
-                        document.getElementById('phone').value = student.phone || '';
-                        document.getElementById('email').value = student.Email || '';
-                        document.getElementById('course').value = student.Course || '';
-                        document.getElementById('query').value = student.Query || '';
-                        document.getElementById('status').value = student.Status || 'Pending';
+                        document.getElementById('editId').value = student.id;
+                        document.getElementById('editName').value = student.name || '';
+                        document.getElementById('editPhone').value = student.phone || '';
+                        document.getElementById('editEmail').value = student.Email || '';
+                        document.getElementById('editCourse').value = student.Course || '';
+                        document.getElementById('editQuery').value = student.Query || '';
+                        document.getElementById('editStatus').value = student.Status || 'Pending';
                         
-                        showNotification(`Editing student: ${student.name || 'ID ' + id}`, 'success');
+                        document.getElementById('studentModal').classList.add('show');
                     }
                 }
             } catch (error) {
-                showNotification('Error loading student details', 'error');
+                showNotification(`Error loading student: ${error.message}`, 'error');
             }
         }
+        
+        // Close Modal
+        function closeModal() {
+            document.getElementById('studentModal').classList.remove('show');
+        }
+        
+        // Edit Form Submission
+        document.getElementById('editForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                method: 'update',
+                id: document.getElementById('editId').value,
+                name: document.getElementById('editName').value,
+                phone: document.getElementById('editPhone').value,
+                email: document.getElementById('editEmail').value,
+                course: document.getElementById('editCourse').value,
+                query: document.getElementById('editQuery').value,
+                status: document.getElementById('editStatus').value
+            };
+            
+            try {
+                const response = await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    body: new URLSearchParams(formData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification('✅ Student updated successfully!', 'success');
+                    closeModal();
+                    loadStudents();
+                } else {
+                    throw new Error(result.message || 'Failed to update student');
+                }
+            } catch (error) {
+                showNotification(`❌ Error: ${error.message}`, 'error');
+            }
+        });
         
         // Delete Student
         async function deleteStudent(id) {
@@ -513,31 +1062,51 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    showNotification('✓ ' + result.message, 'success');
+                    showNotification('✅ Student deleted successfully!', 'success');
                     loadStudents();
                 } else {
-                    showNotification('✗ ' + result.message, 'error');
+                    throw new Error(result.message || 'Failed to delete student');
                 }
             } catch (error) {
-                showNotification('✗ Error deleting student', 'error');
+                showNotification(`❌ Error: ${error.message}`, 'error');
             }
         }
         
-        // Reset Form
-        function resetForm() {
-            document.getElementById('studentForm').reset();
-            document.getElementById('studentId').value = '';
-            showNotification('Form cleared', 'success');
-        }
+        // Event Listeners for Search and Filter
+        document.getElementById('searchInput').addEventListener('input', () => {
+            // Re-filter existing data
+            const students = Array.from(document.querySelectorAll('#studentsTableBody tr'))
+                .map(row => {
+                    const cells = row.querySelectorAll('td');
+                    return {
+                        id: cells[0].textContent,
+                        name: cells[1].textContent,
+                        phone: cells[2].textContent,
+                        Email: cells[3].textContent,
+                        Course: cells[4].textContent,
+                        Status: cells[5].querySelector('span').textContent,
+                        Date: cells[6].textContent,
+                        Timestamp: cells[7].textContent
+                    };
+                });
+            
+            displayStudents(students);
+        });
         
-        // Search and Filter
-        document.getElementById('searchInput').addEventListener('input', loadStudents);
         document.getElementById('statusFilter').addEventListener('change', loadStudents);
         
-        // Auto-test connection if URL is already saved
-        if (WEB_APP_URL) {
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Auto-test connection after 1 second
             setTimeout(testConnection, 1000);
-        }
+        });
+        
+        // Close modal when clicking outside
+        document.getElementById('studentModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
     </script>
 </body>
 </html>
