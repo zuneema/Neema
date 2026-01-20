@@ -91,47 +91,74 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3>Edit Record</h3>
-                <span class="close-modal">&times;</span>
-            </div>
-            <div class="modal-body">
-                <form id="editForm">
-                    <input type="hidden" id="editId">
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="editName">Name</label>
-                            <input type="text" id="editName" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="editPhone">Phone</label>
-                            <input type="text" id="editPhone" required>
-                        </div>
-                    </div>
-                    
+                <!-- Edit Modal -->
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modalTitle">Edit Record</h3>
+            <span class="close-modal">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="editForm">
+                <input type="hidden" id="editId">
+                
+                <div class="form-row">
                     <div class="form-group">
-                        <label for="editEmail">Email</label>
-                        <input type="email" id="editEmail" required>
+                        <label for="editName">Name *</label>
+                        <input type="text" id="editName" required placeholder="Enter full name">
                     </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="editCourse">Course</label>
-                            <select id="editCourse">
-                                <option value="Computer Science">Computer Science</option>
-                                <option value="Other">Other</option>
-                                <option value="Engineering">Engineering</option>
-                                <option value="Business">Business</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="editStatus">Status</label>
-                            <select id="editStatus">
-                                <option value="PENDING">PENDING</option>
-                                <option value="IN PROGRESS">IN PROGRESS</option>
-                                <option value="RESOLVED">RESOLVED</option>
-                            </select>
-                        </div>
+                    <div class="form-group">
+                        <label for="editPhone">Phone *</label>
+                        <input type="text" id="editPhone" required placeholder="Enter phone number">
                     </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editEmail">Email *</label>
+                    <input type="email" id="editEmail" required placeholder="Enter email address">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editCourse">Course *</label>
+                        <select id="editCourse" required>
+                            <option value="">Select a course</option>
+                            <option value="Computer Science">Computer Science</option>
+                            <option value="Engineering">Engineering</option>
+                            <option value="Business">Business</option>
+                            <option value="Medicine">Medicine</option>
+                            <option value="Arts">Arts</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editStatus">Status *</label>
+                        <select id="editStatus" required>
+                            <option value="">Select status</option>
+                            <option value="PENDING">PENDING</option>
+                            <option value="IN PROGRESS">IN PROGRESS</option>
+                            <option value="RESOLVED">RESOLVED</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editQuery">Query *</label>
+                    <textarea id="editQuery" rows="4" required placeholder="Enter student query..."></textarea>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i> Save Record
+                    </button>
+                    <button type="button" class="btn-secondary close-modal">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
                     
                     <div class="form-group">
                         <label for="editQuery">Query</label>
